@@ -1,37 +1,29 @@
 import React, { useEffect, useState } from 'react';
-import { Container, Typography, Pagination, Box, Skeleton } from '@mui/material';
+import { Container, Typography, Box, Skeleton } from '@mui/material';
 import { AnalysisCard } from '../components/AnalysisCard';
 import { FilterPanel } from '../components/FilterPanel';
-import { analysisService } from '../services/analysisService';
-import { AnalysisResult } from '../types/analysis';
+import { getContextGraph } from '../services/analysisService';
+import { PullRequestNode } from '../types/analysis';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 
-const PAGE_SIZE = 10;
-
 export const AnalysisPage: React.FC = () => {
-  const [analyses, setAnalyses] = useState<AnalysisResult[]>([]);
+  const [nodes, setNodes] = useState<PullRequestNode[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [page, setPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
   const [repositoryName, setRepositoryName] = useState('');
 
   const theme = useTheme();
   const isLargeScreen = useMediaQuery(theme.breakpoints.up('md'));
 
   useEffect(() => {
-    const fetchAnalyses = async () => {
+    const fetchData = async () => {
       try {
         setLoading(true);
         setError(null);
-        const response = await analysisService.getAnalyses({
-          page: page - 1,
-          size: PAGE_SIZE,
-          repositoryName: repositoryName || undefined,
-        });
-        setAnalyses(response.data);
-        setTotalPages(Math.ceil(response.total / PAGE_SIZE));
+        // For now, we're using a hardcoded repoId. In a real app, this would come from the repository selection
+        const data = await getContextGraph(1022561644);
+        setNodes(data);
       } catch (err) {
         setError('Failed to fetch analyses. Please try again later.');
       } finally {
@@ -39,16 +31,12 @@ export const AnalysisPage: React.FC = () => {
       }
     };
 
-    fetchAnalyses();
-  }, [page, repositoryName]);
-
-  const handlePageChange = (_: React.ChangeEvent<unknown>, value: number) => {
-    setPage(value);
-  };
+    fetchData();
+  }, []);
 
   const renderContent = () => {
     if (loading) {
-      return Array.from({ length: PAGE_SIZE }).map((_, index) => (
+      return Array.from({ length: 5 }).map((_, index) => (
         <Skeleton key={index} variant="rectangular" height={200} sx={{ mb: 2 }} />
       ));
     }
@@ -61,7 +49,7 @@ export const AnalysisPage: React.FC = () => {
       );
     }
 
-    if (analyses.length === 0) {
+    if (nodes.length === 0) {
       return (
         <Typography align="center" color="textSecondary">
           No analyses found.
@@ -69,8 +57,8 @@ export const AnalysisPage: React.FC = () => {
       );
     }
 
-    return analyses.map((analysis) => (
-      <AnalysisCard key={analysis.id} analysis={analysis} />
+    return nodes.map((node) => (
+      <AnalysisCard key={node.id} node={node} />
     ));
   };
 
@@ -95,16 +83,6 @@ export const AnalysisPage: React.FC = () => {
             </Box>
           )}
           {renderContent()}
-          {!loading && analyses.length > 0 && (
-            <Box display="flex" justifyContent="center" mt={4}>
-              <Pagination
-                count={totalPages}
-                page={page}
-                onChange={handlePageChange}
-                color="primary"
-              />
-            </Box>
-          )}
         </Box>
       </Box>
     </Container>

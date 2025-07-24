@@ -1,23 +1,25 @@
 import React from 'react';
-import { ThemeProvider, createTheme, CssBaseline } from '@mui/material';
-import { AnalysisPage } from './pages/AnalysisPage';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { ThemeProvider } from '@mui/material/styles';
+import CssBaseline from '@mui/material/CssBaseline';
 import { Navbar } from './components/Navbar';
+import { AnalysisPage } from './pages/AnalysisPage';
+import { AnalysisDetailPage } from './pages/AnalysisDetailPage';
 import { useTheme } from './hooks/useTheme';
 
 function App() {
   const { theme, toggleTheme } = useTheme();
 
-  const muiTheme = createTheme({
-    palette: {
-      mode: theme,
-    },
-  });
-
   return (
-    <ThemeProvider theme={muiTheme}>
+    <ThemeProvider theme={theme}>
       <CssBaseline />
-      <Navbar onThemeToggle={toggleTheme} />
-      <AnalysisPage />
+      <Router>
+        <Navbar onThemeToggle={toggleTheme} />
+        <Routes>
+          <Route path="/" element={<AnalysisPage />} />
+          <Route path="/analysis/:repoId" element={<AnalysisDetailPage />} />
+        </Routes>
+      </Router>
     </ThemeProvider>
   );
 }

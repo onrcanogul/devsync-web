@@ -22,4 +22,47 @@ export interface AnalysisFilters {
   repositoryName?: string;
   page: number;
   size: number;
+}
+
+export interface CommitAnalysis {
+  hash: string;
+  technicalComment: string;
+  functionalComment: string;
+  architecturalComment: string;
+  commitRiskScore: number;
+}
+
+export interface Commit {
+  hash: string;
+  message: string;
+  analysis: CommitAnalysis;
+}
+
+export interface GithubUser {
+  githubId: number;
+  username: string;
+  avatarUrl: string;
+  email: string | null;
+  userType: string;
+}
+
+export interface PullRequestNode {
+  id: number;
+  repoId: number;
+  repoName: string;
+  branch: string;
+  pusher: string;
+  headCommitMessage: string;
+  headCommitSha: string;
+  commitCount: number;
+  commits: Commit[];
+  analysis: {
+    id: string | null;
+    technicalComment: string;
+    functionalComment: string;
+    architecturalComment: string;
+    riskScore: number;
+  };
+  createdBy: GithubUser | null;
+  solves: number[];
 } 
