@@ -12,6 +12,7 @@ export const getAnalyses = async (filters: AnalysisFilters): Promise<PaginatedRe
 };
 
 export const getContextGraph = async (repoId: number, branch?: string): Promise<PullRequestNode[]> => {
+  debugger;
   const url = branch 
     ? `${API_URL}/context-graph/${repoId}/${branch}`
     : `${API_URL}/context-graph/${repoId}`;

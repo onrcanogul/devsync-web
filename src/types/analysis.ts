@@ -46,10 +46,21 @@ export interface GithubUser {
   userType: string;
 }
 
+export interface Repository {
+  id: number;
+  name: string;
+  fullName: string;
+  htmlUrl: string;
+  visibility: string;
+  language: string;
+  description: string;
+  defaultBranch: string;
+  ownerLogin: string;
+  ownerId: number;
+}
+
 export interface PullRequestNode {
   id: number;
-  repoId: number;
-  repoName: string;
   branch: string;
   pusher: string;
   headCommitMessage: string;
@@ -65,4 +76,5 @@ export interface PullRequestNode {
   };
   createdBy: GithubUser | null;
   solves: number[];
+  repository: Repository;
 } 

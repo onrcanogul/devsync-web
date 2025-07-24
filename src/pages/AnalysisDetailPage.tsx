@@ -105,14 +105,12 @@ export const AnalysisDetailPage: React.FC = () => {
   };
 
   const getGitHubLinks = (node: PullRequestNode) => {
-    const username = node.createdBy?.username || node.pusher;
-    const baseUrl = `https://github.com/${username}/${node.repoName}`;
-    // Handle branch paths that might include "Task/" or other prefixes
-    const branchPath = node.branch.includes('/') ? node.branch : `Task/${node.branch}`;
+    // Use the repository's HTML URL as the base URL
+    const baseUrl = node.repository.htmlUrl;
     
     return {
       repo: baseUrl,
-      branch: `${baseUrl}/tree/${branchPath}`,
+      branch: `${baseUrl}/tree/${node.branch}`,
       commit: `${baseUrl}/commit/${node.headCommitSha}`,
       pr: (prId: number) => `${baseUrl}/pull/${prId}`,
     };
@@ -173,7 +171,7 @@ export const AnalysisDetailPage: React.FC = () => {
                       '&:hover': { textDecoration: 'underline' }
                     }}
                   >
-                    <Typography variant="h5">{currentNode.repoName}</Typography>
+                    <Typography variant="h5">{currentNode.repository.fullName}</Typography>
                     <OpenInNew sx={{ fontSize: 20 }} />
                   </Link>
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mt: 1 }}>
@@ -195,7 +193,28 @@ export const AnalysisDetailPage: React.FC = () => {
                         clickable
                       />
                     </Link>
+                    {currentNode.repository.language && (
+                      <Chip 
+                        size="small" 
+                        label={currentNode.repository.language}
+                        color="secondary"
+                      />
+                    )}
+                    <Chip 
+                      size="small" 
+                      label={currentNode.repository.visibility}
+                      color={currentNode.repository.visibility === 'public' ? 'success' : 'warning'}
+                    />
                   </Box>
+                  {currentNode.repository.description && (
+                    <Typography 
+                      variant="body2" 
+                      color="text.secondary" 
+                      sx={{ mt: 1 }}
+                    >
+                      {currentNode.repository.description}
+                    </Typography>
+                  )}
                 </Box>
               </Box>
               

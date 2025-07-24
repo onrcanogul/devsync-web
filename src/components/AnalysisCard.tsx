@@ -11,7 +11,7 @@ export const AnalysisCard: React.FC<AnalysisCardProps> = ({ node }) => {
   const navigate = useNavigate();
 
   const handleClick = () => {
-    navigate(`/analysis/${node.repoId}`);
+    navigate(`/analysis/${node.repository.id}`);
   };
 
   return (
