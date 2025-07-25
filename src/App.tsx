@@ -2,22 +2,36 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
-import { Navbar } from './components/Navbar';
-import { AnalysisPage } from './pages/AnalysisPage';
-import { AnalysisDetailPage } from './pages/AnalysisDetailPage';
+import Layout from './components/Layout';
+import AnalysisPage from './pages/AnalysisPage';
+import AnalysisDetailPage from './pages/AnalysisDetailPage';
+import LoginPage from './pages/LoginPage';
+import DashboardPage from './pages/DashboardPage';
+import SettingsPage from './pages/SettingsPage';
 import { useTheme } from './hooks/useTheme';
 
 function App() {
-  const { theme, toggleTheme } = useTheme();
+  const { theme } = useTheme();
 
   return (
     <ThemeProvider theme={theme}>
-      <CssBaseline />
+      <CssBaseline enableColorScheme />
       <Router>
-        <Navbar onThemeToggle={toggleTheme} />
         <Routes>
-          <Route path="/" element={<AnalysisPage />} />
-          <Route path="/analysis/:repoId" element={<AnalysisDetailPage />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route
+            path="/*"
+            element={
+              <Layout>
+                <Routes>
+                  <Route path="/" element={<DashboardPage />} />
+                  <Route path="/analysis" element={<AnalysisPage />} />
+                  <Route path="/analysis/:repoId" element={<AnalysisDetailPage />} />
+                  <Route path="/settings" element={<SettingsPage />} />
+                </Routes>
+              </Layout>
+            }
+          />
         </Routes>
       </Router>
     </ThemeProvider>

@@ -1,58 +1,104 @@
-import { useState, useMemo, useEffect } from 'react';
-import { createTheme } from '@mui/material/styles';
+import { useMemo, useState, useEffect } from 'react';
+import { createTheme, Theme } from '@mui/material';
 
 type ThemeMode = 'light' | 'dark';
+type AccentColor = '#6366F1' | '#10B981' | '#F59E0B' | '#EF4444';
 
-const THEME_STORAGE_KEY = 'devsync-theme-preference';
+const THEME_MODE_KEY = 'theme-mode';
+const ACCENT_COLOR_KEY = 'accent-color';
 
 export const useTheme = () => {
   const [mode, setMode] = useState<ThemeMode>(() => {
-    // İlk yüklemede localStorage'dan tema tercihini al
-    const savedTheme = localStorage.getItem(THEME_STORAGE_KEY);
-    // Eğer localStorage'da tema yoksa, sistem tercihini kontrol et
-    if (!savedTheme && window.matchMedia) {
-      return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-    }
-    // localStorage'da tema varsa onu kullan, yoksa light tema
-    return (savedTheme as ThemeMode) || 'light';
+    const savedMode = localStorage.getItem(THEME_MODE_KEY);
+    return (savedMode as ThemeMode) || 'dark';
   });
 
-  // Tema değiştiğinde localStorage'a kaydet
-  useEffect(() => {
-    localStorage.setItem(THEME_STORAGE_KEY, mode);
-  }, [mode]);
+  const [accentColor, setAccentColor] = useState<AccentColor>(() => {
+    const savedColor = localStorage.getItem(ACCENT_COLOR_KEY);
+    return (savedColor as AccentColor) || '#6366F1';
+  });
 
-  // Sistem teması değiştiğinde temayı güncelle (eğer localStorage'da tema yoksa)
-  useEffect(() => {
-    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-    
-    const handleChange = (e: MediaQueryListEvent) => {
-      if (!localStorage.getItem(THEME_STORAGE_KEY)) {
-        setMode(e.matches ? 'dark' : 'light');
-      }
-    };
+  const theme = useMemo(() => {
+    const baseTheme = createTheme({
+      palette: {
+        mode,
+        primary: {
+          main: accentColor,
+        },
+        background: {
+          default: mode === 'dark' ? '#0F172A' : '#F8FAFC',
+          paper: mode === 'dark' ? '#1E293B' : '#FFFFFF',
+        },
+        text: {
+          primary: mode === 'dark' ? '#F8FAFC' : '#1E293B',
+          secondary: mode === 'dark' ? '#94A3B8' : '#64748B',
+        },
+      },
+      shape: {
+        borderRadius: 8,
+      },
+      components: {
+        MuiButton: {
+          styleOverrides: {
+            root: {
+              textTransform: 'none',
+              borderRadius: 8,
+            },
+          },
+        },
+        MuiPaper: {
+          styleOverrides: {
+            root: {
+              backgroundImage: 'none',
+            },
+          },
+        },
+        MuiListItemButton: {
+          styleOverrides: {
+            root: {
+              borderRadius: 8,
+              '&.Mui-selected': {
+                backgroundColor: mode === 'dark' 
+                  ? `${accentColor}15`
+                  : `${accentColor}15`,
+                color: accentColor,
+                '&:hover': {
+                  backgroundColor: mode === 'dark'
+                    ? `${accentColor}25`
+                    : `${accentColor}25`,
+                },
+              },
+            },
+          },
+        },
+        MuiListItemIcon: {
+          styleOverrides: {
+            root: {
+              color: 'inherit',
+            },
+          },
+        },
+      },
+    });
 
-    mediaQuery.addEventListener('change', handleChange);
-    return () => mediaQuery.removeEventListener('change', handleChange);
-  }, []);
+    return baseTheme;
+  }, [mode, accentColor]);
 
   const toggleTheme = () => {
-    setMode((prevMode) => (prevMode === 'light' ? 'dark' : 'light'));
+    const newMode = mode === 'light' ? 'dark' : 'light';
+    setMode(newMode);
+    localStorage.setItem(THEME_MODE_KEY, newMode);
   };
 
-  const theme = useMemo(
-    () =>
-      createTheme({
-        palette: {
-          mode,
-        },
-      }),
-    [mode]
-  );
-
-  return {
-    theme,
-    toggleTheme,
-    mode,
+  const changeAccentColor = (color: AccentColor) => {
+    setAccentColor(color);
+    localStorage.setItem(ACCENT_COLOR_KEY, color);
   };
+
+  useEffect(() => {
+    // Tema değiştiğinde body arka plan rengini güncelle
+    document.body.style.backgroundColor = theme.palette.background.default;
+  }, [theme]);
+
+  return { theme, mode, accentColor, toggleTheme, changeAccentColor };
 }; 

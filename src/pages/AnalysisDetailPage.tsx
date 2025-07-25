@@ -1,368 +1,471 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { 
-  Container, 
-  Typography, 
-  Paper, 
-  Box, 
-  Avatar, 
-  Chip, 
-  Tabs, 
-  Tab, 
-  Link,
-  Divider,
-  Card,
-  CardContent,
-  IconButton,
-  Badge,
+import {
+  Box,
+  Paper,
+  Typography,
+  Chip,
+  LinearProgress,
   Stack,
+  IconButton,
+  Tooltip,
+  Button,
+  Divider,
+  Avatar,
+  Grid,
 } from '@mui/material';
-import { 
-  GitHub, 
-  OpenInNew, 
-  Assessment, 
-  Architecture, 
-  Code, 
+import {
   Commit as CommitIcon,
-  BugReport,
-  CheckCircle,
-  Link as LinkIcon,
+  ArrowBack as ArrowBackIcon,
+  TrendingUp as TrendingUpIcon,
+  BugReport as BugReportIcon,
+  Speed as SpeedIcon,
+  Code as CodeIcon,
+  Person as PersonIcon,
+  CalendarToday as CalendarIcon,
 } from '@mui/icons-material';
-import { PullRequestNode } from '../types/analysis';
-import { getContextGraph } from '../services/analysisService';
-import { ContextGraphVisualizer } from '../components/ContextGraphVisualizer';
+import { useNavigate } from 'react-router-dom';
+import CommitDetailModal from '../components/CommitDetailModal';
+import CommitFilterPanel, { CommitFilters } from '../components/CommitFilterPanel';
 
-interface TabPanelProps {
-  children?: React.ReactNode;
-  index: number;
-  value: number;
-}
-
-function TabPanel(props: TabPanelProps) {
-  const { children, value, index, ...other } = props;
+const CommitAnalysis = ({ commit }: any) => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   return (
-    <div
-      role="tabpanel"
-      hidden={value !== index}
-      id={`analysis-tabpanel-${index}`}
-      aria-labelledby={`analysis-tab-${index}`}
-      {...other}
-    >
-      {value === index && <Box sx={{ py: 3 }}>{children}</Box>}
-    </div>
+    <>
+      <Paper
+        elevation={0}
+        onClick={() => setIsModalOpen(true)}
+        sx={{
+          p: 2,
+          borderRadius: 2,
+          bgcolor: 'background.paper',
+          cursor: 'pointer',
+          '&:hover': {
+            bgcolor: 'background.default',
+            transform: 'translateY(-2px)',
+            boxShadow: '0 8px 24px rgba(0,0,0,0.12)',
+          },
+          transition: 'all 0.2s ease-in-out',
+        }}
+      >
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
+          <Avatar src={commit.author.avatar} />
+          <Box sx={{ flex: 1, minWidth: 0 }}>
+            <Typography 
+              variant="subtitle2" 
+              sx={{ 
+                fontWeight: 600,
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                whiteSpace: 'nowrap',
+              }}
+            >
+              {commit.message}
+            </Typography>
+            <Typography 
+              variant="caption" 
+              color="text.secondary"
+              sx={{
+                display: 'block',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                whiteSpace: 'nowrap',
+              }}
+            >
+              {commit.author.name} • {new Date(commit.date).toLocaleDateString()}
+            </Typography>
+          </Box>
+          <Chip
+            size="small"
+            label={commit.type}
+            sx={{
+              minWidth: 'auto',
+              bgcolor: 
+                commit.type === 'feature' ? '#10B98115' :
+                commit.type === 'bugfix' ? '#EF444415' :
+                commit.type === 'refactor' ? '#6366F115' :
+                '#F59E0B15',
+              color:
+                commit.type === 'feature' ? '#10B981' :
+                commit.type === 'bugfix' ? '#EF4444' :
+                commit.type === 'refactor' ? '#6366F1' :
+                '#F59E0B',
+            }}
+          />
+        </Box>
+
+        <Box sx={{ 
+          display: 'grid', 
+          gridTemplateColumns: {
+            xs: 'repeat(2, 1fr)',
+            sm: 'repeat(3, 1fr)',
+          },
+          gap: 2 
+        }}>
+          <Box>
+            <Typography variant="caption" color="text.secondary">
+              Değişen Dosyalar
+            </Typography>
+            <Typography variant="h6" sx={{ fontWeight: 600 }}>
+              {commit.stats.changedFiles}
+            </Typography>
+          </Box>
+          <Box>
+            <Typography variant="caption" color="text.secondary">
+              Eklenen Satırlar
+            </Typography>
+            <Typography variant="h6" sx={{ color: '#10B981', fontWeight: 600 }}>
+              +{commit.stats.additions}
+            </Typography>
+          </Box>
+          <Box sx={{ 
+            gridColumn: { 
+              xs: 'span 2',
+              sm: 'auto'
+            }
+          }}>
+            <Typography variant="caption" color="text.secondary">
+              Silinen Satırlar
+            </Typography>
+            <Typography variant="h6" sx={{ color: '#EF4444', fontWeight: 600 }}>
+              -{commit.stats.deletions}
+            </Typography>
+          </Box>
+        </Box>
+
+        {commit.analysis && (
+          <Box sx={{ mt: 2 }}>
+            <Divider sx={{ my: 2 }} />
+            <Typography variant="subtitle2" sx={{ mb: 1, fontWeight: 600 }}>
+              Commit Analizi
+            </Typography>
+            <Typography 
+              variant="body2" 
+              color="text.secondary"
+              sx={{
+                display: '-webkit-box',
+                WebkitLineClamp: 2,
+                WebkitBoxOrient: 'vertical',
+                overflow: 'hidden',
+              }}
+            >
+              {commit.analysis}
+            </Typography>
+          </Box>
+        )}
+      </Paper>
+
+      <CommitDetailModal
+        open={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        commit={commit}
+      />
+    </>
   );
-}
+};
 
-const AnalysisCard: React.FC<{
-  title: string;
-  content: string;
-  icon: React.ReactNode;
-}> = ({ title, content, icon }) => (
-  <Card variant="outlined" sx={{ height: '100%' }}>
-    <CardContent>
-      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 2 }}>
-        {icon}
-        <Typography variant="h6" component="h3">
-          {title}
-        </Typography>
-      </Box>
-      <Typography variant="body1" color="text.secondary" sx={{ whiteSpace: 'pre-line' }}>
-        {content}
-      </Typography>
-    </CardContent>
-  </Card>
-);
-
-export const AnalysisDetailPage: React.FC = () => {
-  const { repoId } = useParams<{ repoId: string }>();
-  const [data, setData] = useState<PullRequestNode[]>([]);
+const AnalysisDetailPage = () => {
+  const { repoId } = useParams();
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [tabValue, setTabValue] = useState(0);
+  const [filters, setFilters] = useState<CommitFilters>({
+    search: '',
+    types: [],
+    authors: [],
+    dateRange: [1, 90],
+    impactScore: [0, 100],
+    onlyWithAnalysis: false,
+  });
+
+  // Mock data for demonstration
+  const repoDetails = {
+    name: 'frontend-app',
+    description: 'Modern web uygulaması frontend kodu',
+    metrics: {
+      codeQuality: 85,
+      coverage: 76,
+      performance: 92,
+    },
+    commits: [
+      {
+        id: 1,
+        message: 'Authentication sistemi güncellendi',
+        type: 'feature',
+        author: {
+          name: 'Ahmet Yılmaz',
+          avatar: 'https://ui-avatars.com/api/?name=AY&background=random',
+        },
+        date: '2024-03-10',
+        stats: {
+          changedFiles: 12,
+          additions: 345,
+          deletions: 123,
+        },
+        analysis: 'Bu commit ile authentication sistemi JWT tabanlı yapıya geçirildi. Güvenlik iyileştirmeleri ve performans optimizasyonları yapıldı.',
+      },
+      {
+        id: 2,
+        message: 'API entegrasyonu hataları giderildi',
+        type: 'bugfix',
+        author: {
+          name: 'Mehmet Demir',
+          avatar: 'https://ui-avatars.com/api/?name=MD&background=random',
+        },
+        date: '2024-03-09',
+        stats: {
+          changedFiles: 5,
+          additions: 67,
+          deletions: 45,
+        },
+        analysis: 'API çağrılarındaki hata yönetimi iyileştirildi. Error boundary ve retry mekanizmaları eklendi.',
+      },
+      {
+        id: 3,
+        message: 'Component mimarisi yeniden düzenlendi',
+        type: 'refactor',
+        author: {
+          name: 'Ayşe Kaya',
+          avatar: 'https://ui-avatars.com/api/?name=AK&background=random',
+        },
+        date: '2024-03-08',
+        stats: {
+          changedFiles: 25,
+          additions: 578,
+          deletions: 489,
+        },
+        analysis: 'Component yapısı atomic design prensipleri doğrultusunda yeniden düzenlendi. Kod tekrarı azaltıldı ve maintainability artırıldı.',
+      },
+    ],
+  };
+
+  const uniqueAuthors = Array.from(
+    new Set(repoDetails.commits.map(commit => commit.author.name))
+  ).map(name => {
+    const author = repoDetails.commits.find(c => c.author.name === name)!.author;
+    return { name: author.name, avatar: author.avatar };
+  });
+
+  const getImpactScore = (commit: any) => {
+    return Math.round(
+      ((commit.stats.additions + commit.stats.deletions) / 10) +
+      (commit.stats.changedFiles * 5)
+    );
+  };
+
+  const filteredCommits = repoDetails.commits.filter(commit => {
+    // Arama filtresi
+    if (filters.search && !commit.message.toLowerCase().includes(filters.search.toLowerCase())) {
+      return false;
+    }
+
+    // Tip filtresi
+    if (filters.types.length > 0 && !filters.types.includes(commit.type)) {
+      return false;
+    }
+
+    // Yazar filtresi
+    if (filters.authors.length > 0 && !filters.authors.includes(commit.author.name)) {
+      return false;
+    }
+
+    // Tarih filtresi
+    const commitDate = new Date(commit.date);
+    const today = new Date();
+    const daysDiff = Math.floor((today.getTime() - commitDate.getTime()) / (1000 * 60 * 60 * 24));
+    if (daysDiff < filters.dateRange[0] || daysDiff > filters.dateRange[1]) {
+      return false;
+    }
+
+    // Etki skoru filtresi
+    const impactScore = getImpactScore(commit);
+    if (impactScore < filters.impactScore[0] || impactScore > filters.impactScore[1]) {
+      return false;
+    }
+
+    // AI analizi filtresi
+    if (filters.onlyWithAnalysis && !commit.analysis) {
+      return false;
+    }
+
+    return true;
+  });
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setLoading(true);
-        const nodes = await getContextGraph(Number(repoId));
-        setData(nodes);
-      } catch (err) {
-        setError('Failed to fetch analysis data');
-        console.error(err);
-      } finally {
-        setLoading(false);
-      }
-    };
+    // Simulating API call
+    setTimeout(() => {
+      setLoading(false);
+    }, 1000);
+  }, []);
 
-    if (repoId) {
-      fetchData();
-    }
-  }, [repoId]);
-
-  const handleTabChange = (_: React.SyntheticEvent, newValue: number) => {
-    setTabValue(newValue);
-  };
-
-  const getGitHubLinks = (node: PullRequestNode) => {
-    // Use the repository's HTML URL as the base URL
-    const baseUrl = node.repository.htmlUrl;
-    
-    return {
-      repo: baseUrl,
-      branch: `${baseUrl}/tree/${node.branch}`,
-      commit: `${baseUrl}/commit/${node.headCommitSha}`,
-      pr: (prId: number) => `${baseUrl}/pull/${prId}`,
-    };
-  };
-
-  if (loading) {
-    return (
-      <Container maxWidth="xl" sx={{ mt: 10 }}>
-        <Typography>Loading...</Typography>
-      </Container>
-    );
-  }
-
-  if (error || !data.length) {
-    return (
-      <Container maxWidth="xl" sx={{ mt: 10 }}>
-        <Typography color="error">{error || 'No data found'}</Typography>
-      </Container>
-    );
-  }
-
-  const currentNode = data[0];
-  const githubLinks = getGitHubLinks(currentNode);
+  if (loading) return <LinearProgress />;
 
   return (
-    <Container maxWidth="xl" sx={{ mt: 10, mb: 4 }}>
-      <Box sx={{ borderBottom: 1, borderColor: 'divider', mb: 3 }}>
-        <Tabs value={tabValue} onChange={handleTabChange}>
-          <Tab label="Analysis Details" />
-          <Tab label="Context Graph" />
-        </Tabs>
+    <Box sx={{ p: { xs: 2, sm: 3 } }}>
+      <Box sx={{ 
+        display: 'flex', 
+        alignItems: { xs: 'flex-start', sm: 'center' }, 
+        flexDirection: { xs: 'column', sm: 'row' },
+        gap: 2, 
+        mb: 4 
+      }}>
+        <IconButton 
+          onClick={() => navigate('/analysis')}
+          sx={{ alignSelf: { xs: 'flex-start', sm: 'center' } }}
+        >
+          <ArrowBackIcon />
+        </IconButton>
+        <Box sx={{ flex: 1 }}>
+          <Typography variant="h5" sx={{ fontWeight: 600 }}>
+            {repoDetails.name}
+          </Typography>
+          <Typography variant="body2" color="text.secondary">
+            {repoDetails.description}
+          </Typography>
+        </Box>
+        <Button
+          variant="contained"
+          startIcon={<CommitIcon />}
+          sx={{ 
+            bgcolor: '#6366F1', 
+            '&:hover': { bgcolor: '#4F46E5' },
+            alignSelf: { xs: 'stretch', sm: 'auto' },
+          }}
+        >
+          Yeni Analiz
+        </Button>
       </Box>
 
-      <TabPanel value={tabValue} index={0}>
-        <Stack spacing={3}>
-          {/* Header Card */}
-          <Paper elevation={1} sx={{ p: 3 }}>
-            <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 2 }}>
-              {/* Left side - Repository info */}
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, flex: 1 }}>
-                <Avatar 
-                  src={currentNode.createdBy?.avatarUrl} 
-                  sx={{ width: 64, height: 64 }}
-                >
-                  <GitHub sx={{ width: 40, height: 40 }} />
-                </Avatar>
-                <Box>
-                  <Link
-                    href={githubLinks.repo}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    sx={{ 
-                      display: 'flex', 
-                      alignItems: 'center', 
-                      gap: 1,
-                      color: 'primary.main',
-                      textDecoration: 'none',
-                      '&:hover': { textDecoration: 'underline' }
-                    }}
-                  >
-                    <Typography variant="h5">{currentNode.repository.fullName}</Typography>
-                    <OpenInNew sx={{ fontSize: 20 }} />
-                  </Link>
-                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mt: 1 }}>
-                    <Chip 
-                      size="small" 
-                      icon={<CommitIcon />} 
-                      label={`${currentNode.commitCount} commits`}
-                    />
-                    <Link
-                      href={githubLinks.branch}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      sx={{ textDecoration: 'none' }}
-                    >
-                      <Chip 
-                        size="small" 
-                        icon={<LinkIcon />}
-                        label={currentNode.branch}
-                        clickable
-                      />
-                    </Link>
-                    {currentNode.repository.language && (
-                      <Chip 
-                        size="small" 
-                        label={currentNode.repository.language}
-                        color="secondary"
-                      />
-                    )}
-                    <Chip 
-                      size="small" 
-                      label={currentNode.repository.visibility}
-                      color={currentNode.repository.visibility === 'public' ? 'success' : 'warning'}
-                    />
-                  </Box>
-                  {currentNode.repository.description && (
-                    <Typography 
-                      variant="body2" 
-                      color="text.secondary" 
-                      sx={{ mt: 1 }}
-                    >
-                      {currentNode.repository.description}
-                    </Typography>
-                  )}
-                </Box>
-              </Box>
-              
-              {/* Right side - Risk score */}
-              <Box sx={{ textAlign: 'right' }}>
-                <Typography variant="overline" display="block">Risk Score</Typography>
-                <Chip
-                  label={currentNode.analysis.riskScore}
-                  color={currentNode.analysis.riskScore > 5 ? 'error' : 'success'}
-                  icon={currentNode.analysis.riskScore > 5 ? <BugReport /> : <CheckCircle />}
-                  sx={{ fontSize: '1.2rem', padding: '16px' }}
-                />
-              </Box>
+      <Box sx={{
+        display: 'grid',
+        gridTemplateColumns: {
+          xs: '1fr',
+          sm: 'repeat(2, 1fr)',
+          md: 'repeat(3, 1fr)'
+        },
+        gap: 2,
+        mb: 4
+      }}>
+        <Paper
+          elevation={0}
+          sx={{
+            p: 3,
+            borderRadius: 2,
+            bgcolor: 'background.paper',
+          }}
+        >
+          <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+            <Box
+              sx={{
+                p: 1,
+                borderRadius: 2,
+                bgcolor: '#6366F115',
+                color: '#6366F1',
+                mr: 2,
+              }}
+            >
+              <CodeIcon />
             </Box>
-
-            <Divider sx={{ my: 3 }} />
-
-            {/* Commit Info */}
-            <Box>
-              <Typography variant="h6" gutterBottom>
-                {currentNode.headCommitMessage}
-              </Typography>
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, color: 'text.secondary' }}>
-                <Typography variant="body2">
-                  by {currentNode.pusher}
-                </Typography>
-                <Divider orientation="vertical" flexItem />
-                <Link
-                  href={githubLinks.commit}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  sx={{ 
-                    display: 'flex', 
-                    alignItems: 'center', 
-                    gap: 0.5,
-                    color: 'inherit',
-                    textDecoration: 'none',
-                    '&:hover': { textDecoration: 'underline' }
-                  }}
-                >
-                  <CommitIcon sx={{ fontSize: 16 }} />
-                  <Typography variant="body2">
-                    {currentNode.headCommitSha.substring(0, 7)}
-                  </Typography>
-                  <OpenInNew sx={{ fontSize: 14 }} />
-                </Link>
-              </Box>
-            </Box>
-          </Paper>
-
-          {/* Analysis Cards */}
-          <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: 'repeat(3, 1fr)' }, gap: 3 }}>
-            <AnalysisCard
-              title="Technical Analysis"
-              content={currentNode.analysis.technicalComment}
-              icon={<Code color="primary" />}
-            />
-            <AnalysisCard
-              title="Functional Analysis"
-              content={currentNode.analysis.functionalComment}
-              icon={<Assessment color="primary" />}
-            />
-            <AnalysisCard
-              title="Architectural Analysis"
-              content={currentNode.analysis.architecturalComment}
-              icon={<Architecture color="primary" />}
-            />
-          </Box>
-
-          {/* Commits Section */}
-          <Paper elevation={1} sx={{ p: 3 }}>
-            <Typography variant="h6" gutterBottom sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-              <CommitIcon />
-              Commits
+            <Typography variant="body2" color="text.secondary">
+              Kod Kalitesi
             </Typography>
-            <Stack spacing={2}>
-              {currentNode.commits.map((commit) => (
-                <Paper key={commit.hash} variant="outlined" sx={{ p: 2 }}>
-                  <Box sx={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', mb: 1 }}>
-                    <Typography variant="subtitle1" sx={{ fontWeight: 500 }}>
-                      {commit.message}
-                    </Typography>
-                    <Link
-                      href={`${githubLinks.repo}/commit/${commit.hash}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      sx={{ 
-                        display: 'flex', 
-                        alignItems: 'center', 
-                        gap: 0.5,
-                        color: 'text.secondary',
-                        textDecoration: 'none',
-                        '&:hover': { textDecoration: 'underline' }
-                      }}
-                    >
-                      <Typography variant="caption">
-                        {commit.hash.substring(0, 7)}
-                      </Typography>
-                      <OpenInNew sx={{ fontSize: 12 }} />
-                    </Link>
-                  </Box>
-                  <Typography variant="body2" color="text.secondary">
-                    {commit.analysis.technicalComment}
-                  </Typography>
-                </Paper>
-              ))}
-            </Stack>
-          </Paper>
-
-          {/* Related PRs Section */}
-          {currentNode.solves.length > 0 && (
-            <Paper elevation={1} sx={{ p: 3 }}>
-              <Typography variant="h6" gutterBottom sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                <LinkIcon />
-                Related Pull Requests
-              </Typography>
-              <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
-                {currentNode.solves.map((prId) => (
-                  <Link
-                    key={prId}
-                    href={githubLinks.pr(prId)}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    sx={{ textDecoration: 'none' }}
-                  >
-                    <Chip 
-                      label={`#${prId}`} 
-                      color="primary" 
-                      variant="outlined"
-                      icon={<OpenInNew sx={{ fontSize: 14 }} />}
-                      clickable
-                    />
-                  </Link>
-                ))}
-              </Box>
-            </Paper>
-          )}
-        </Stack>
-      </TabPanel>
-
-      <TabPanel value={tabValue} index={1}>
-        <Paper elevation={1} sx={{ p: 4 }}>
-          <Typography variant="h5" gutterBottom>
-            Context Graph
+          </Box>
+          <Typography variant="h4" fontWeight="bold">
+            {repoDetails.metrics.codeQuality}%
           </Typography>
-          <ContextGraphVisualizer nodes={data} />
         </Paper>
-      </TabPanel>
-    </Container>
+
+        <Paper
+          elevation={0}
+          sx={{
+            p: 3,
+            borderRadius: 2,
+            bgcolor: 'background.paper',
+          }}
+        >
+          <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+            <Box
+              sx={{
+                p: 1,
+                borderRadius: 2,
+                bgcolor: '#10B98115',
+                color: '#10B981',
+                mr: 2,
+              }}
+            >
+              <SpeedIcon />
+            </Box>
+            <Typography variant="body2" color="text.secondary">
+              Test Kapsamı
+            </Typography>
+          </Box>
+          <Typography variant="h4" fontWeight="bold">
+            {repoDetails.metrics.coverage}%
+          </Typography>
+        </Paper>
+
+        <Paper
+          elevation={0}
+          sx={{
+            p: 3,
+            borderRadius: 2,
+            bgcolor: 'background.paper',
+          }}
+        >
+          <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+            <Box
+              sx={{
+                p: 1,
+                borderRadius: 2,
+                bgcolor: '#F59E0B15',
+                color: '#F59E0B',
+                mr: 2,
+              }}
+            >
+              <TrendingUpIcon />
+            </Box>
+            <Typography variant="body2" color="text.secondary">
+              Performans
+            </Typography>
+          </Box>
+          <Typography variant="h4" fontWeight="bold">
+            {repoDetails.metrics.performance}%
+          </Typography>
+        </Paper>
+      </Box>
+
+      <Box sx={{ mb: 4 }}>
+        <CommitFilterPanel
+          filters={filters}
+          onFiltersChange={setFilters}
+          authors={uniqueAuthors}
+          onReset={() => setFilters({
+            search: '',
+            types: [],
+            authors: [],
+            dateRange: [1, 90],
+            impactScore: [0, 100],
+            onlyWithAnalysis: false,
+          })}
+        />
+      </Box>
+
+      <Box sx={{ mb: 3 }}>
+        <Typography variant="h6" sx={{ fontWeight: 600 }}>
+          Commit Analizleri
+        </Typography>
+        <Typography variant="body2" color="text.secondary">
+          {repoDetails.commits.length} commit gösteriliyor
+        </Typography>
+      </Box>
+
+      <Stack spacing={2}>
+        {repoDetails.commits.map((commit) => (
+          <CommitAnalysis key={commit.id} commit={commit} />
+        ))}
+      </Stack>
+    </Box>
   );
-}; 
+};
+
+export default AnalysisDetailPage; 
