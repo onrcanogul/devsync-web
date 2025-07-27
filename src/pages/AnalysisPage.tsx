@@ -1,405 +1,231 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   Box,
-  Paper,
   Typography,
-  Chip,
+  Grid,
+  Paper,
   LinearProgress,
-  IconButton,
-  InputAdornment,
-  TextField,
+  Chip,
   Stack,
-  Button,
-  Menu,
-  MenuItem,
+  IconButton,
   Tooltip,
+  useTheme,
+  alpha,
+  Link
 } from '@mui/material';
 import {
-  Search as SearchIcon,
-  FilterList as FilterListIcon,
-  TrendingUp as TrendingUpIcon,
+  GitHub as GitHubIcon,
   BugReport as BugReportIcon,
   Speed as SpeedIcon,
+  Security as SecurityIcon,
   Code as CodeIcon,
-  MoreVert as MoreVertIcon,
-  Refresh as RefreshIcon,
+  CallSplit as CallSplitIcon,
+  Commit as CommitIcon,
+  CheckCircle as CheckCircleIcon,
+  Warning as WarningIcon,
+  Error as ErrorIcon,
+  Circle as CircleIcon,
+  Launch as LaunchIcon
 } from '@mui/icons-material';
-import { useNavigate } from 'react-router-dom';
-import { getAnalysisData } from '../services/mockData';
+import { getConnectedRepositories } from '../services/mockData';
 
-// Chart component imports would go here
-// import { LineChart, BarChart } from 'recharts';
-
-const StatusChip = ({ status }: { status: string }) => {
-  const getStatusColor = () => {
-    switch (status) {
-      case 'completed':
-        return { bg: '#10B98115', color: '#10B981' };
-      case 'in_progress':
-        return { bg: '#6366F115', color: '#6366F1' };
-      case 'queued':
-        return { bg: '#F59E0B15', color: '#F59E0B' };
-      default:
-        return { bg: '#6B728015', color: '#6B7280' };
-    }
-  };
-
-  const { bg, color } = getStatusColor();
+const MetricProgress: React.FC<{ value: number; label: string }> = ({ value, label }) => {
+  const theme = useTheme();
+  const color = value >= 90 ? theme.palette.success.main :
+                value >= 70 ? theme.palette.warning.main :
+                theme.palette.error.main;
 
   return (
-    <Chip
-      label={status.replace('_', ' ')}
-      sx={{
-        bgcolor: bg,
-        color: color,
-        textTransform: 'capitalize',
-        fontWeight: 500,
-      }}
-      size="small"
-    />
-  );
-};
-
-const MetricCard = ({ title, value, icon, color }: any) => (
-  <Paper
-    elevation={0}
-    sx={{
-      p: 3,
-      height: '100%',
-      bgcolor: 'background.paper',
-      borderRadius: 2,
-      display: 'flex',
-      flexDirection: 'column',
-    }}
-  >
-    <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-      <Box
+    <Box sx={{ width: '100%' }}>
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 0.5 }}>
+        <Typography variant="body2" color="text.secondary">
+          {label}
+        </Typography>
+        <Typography variant="body2" color="text.secondary">
+          {value}%
+        </Typography>
+      </Box>
+      <LinearProgress
+        variant="determinate"
+        value={value}
         sx={{
-          p: 1,
-          borderRadius: 2,
-          bgcolor: `${color}15`,
-          color: color,
-          mr: 2,
-        }}
-      >
-        {icon}
-      </Box>
-      <Typography variant="body2" color="text.secondary">
-        {title}
-      </Typography>
-    </Box>
-    <Typography variant="h4" fontWeight="bold">
-      {typeof value === 'number' ? value.toFixed(1) : value}
-    </Typography>
-  </Paper>
-);
-
-const RepositoryAnalysis = ({ repo }: any) => {
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const navigate = useNavigate();
-
-  const handleCardClick = () => {
-    navigate(`/analysis/${repo.id}`);
-  };
-
-  const handleMenuClick = (event: React.MouseEvent<HTMLElement>) => {
-    event.stopPropagation(); // Prevent card click when clicking menu
-    setAnchorEl(event.currentTarget);
-  };
-
-  return (
-    <Paper
-      elevation={0}
-      onClick={handleCardClick}
-      sx={{
-        p: 3,
-        borderRadius: 2,
-        bgcolor: 'background.paper',
-        cursor: 'pointer',
-        '&:hover': {
-          bgcolor: 'background.default',
-          transform: 'translateY(-2px)',
-          boxShadow: '0 8px 24px rgba(0,0,0,0.12)',
-        },
-        transition: 'all 0.2s ease-in-out',
-      }}
-    >
-      <Box sx={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', mb: 2 }}>
-        <Box>
-          <Typography variant="h6" sx={{ mb: 1, fontWeight: 600 }}>
-            {repo.name}
-          </Typography>
-          <Stack direction="row" spacing={1} alignItems="center">
-            <StatusChip status={repo.status} />
-            <Typography variant="caption" color="text.secondary">
-              Son analiz: {new Date(repo.lastAnalysis).toLocaleDateString()}
-            </Typography>
-          </Stack>
-        </Box>
-        <IconButton
-          size="small"
-          onClick={handleMenuClick}
-        >
-          <MoreVertIcon />
-        </IconButton>
-      </Box>
-
-      <Box sx={{ 
-        display: 'grid', 
-        gridTemplateColumns: 'repeat(3, 1fr)', 
-        gap: 2, 
-        mb: 3 
-      }}>
-        <Box>
-          <Typography variant="caption" color="text.secondary" sx={{ mb: 1 }}>
-            Kod Kalitesi
-          </Typography>
-          <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <Box sx={{ flex: 1, mr: 1 }}>
-              <LinearProgress
-                variant="determinate"
-                value={repo.metrics.codeQuality}
-                sx={{
-                  height: 8,
-                  borderRadius: 4,
-                  bgcolor: '#6366F115',
-                  '& .MuiLinearProgress-bar': {
-                    bgcolor: '#6366F1',
-                    borderRadius: 4,
-                  },
-                }}
-              />
-            </Box>
-            <Typography variant="body2" fontWeight="medium">
-              {repo.metrics.codeQuality}%
-            </Typography>
-          </Box>
-        </Box>
-
-        <Box>
-          <Typography variant="caption" color="text.secondary" sx={{ mb: 1 }}>
-            Test Kapsamı
-          </Typography>
-          <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <Box sx={{ flex: 1, mr: 1 }}>
-              <LinearProgress
-                variant="determinate"
-                value={repo.metrics.coverage}
-                sx={{
-                  height: 8,
-                  borderRadius: 4,
-                  bgcolor: '#10B98115',
-                  '& .MuiLinearProgress-bar': {
-                    bgcolor: '#10B981',
-                    borderRadius: 4,
-                  },
-                }}
-              />
-            </Box>
-            <Typography variant="body2" fontWeight="medium">
-              {repo.metrics.coverage}%
-            </Typography>
-          </Box>
-        </Box>
-
-        <Box>
-          <Typography variant="caption" color="text.secondary" sx={{ mb: 1 }}>
-            Performans
-          </Typography>
-          <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <Box sx={{ flex: 1, mr: 1 }}>
-              <LinearProgress
-                variant="determinate"
-                value={repo.metrics.performance}
-                sx={{
-                  height: 8,
-                  borderRadius: 4,
-                  bgcolor: '#F59E0B15',
-                  '& .MuiLinearProgress-bar': {
-                    bgcolor: '#F59E0B',
-                    borderRadius: 4,
-                  },
-                }}
-              />
-            </Box>
-            <Typography variant="body2" fontWeight="medium">
-              {repo.metrics.performance}%
-            </Typography>
-          </Box>
-        </Box>
-      </Box>
-
-      <Box sx={{ display: 'flex', gap: 2 }}>
-        <Chip
-          icon={<BugReportIcon sx={{ color: '#EF4444 !important' }} />}
-          label={`${repo.issues.high} Kritik`}
-          variant="outlined"
-          sx={{ borderColor: '#EF444440', color: '#EF4444' }}
-        />
-        <Chip
-          icon={<BugReportIcon sx={{ color: '#F59E0B !important' }} />}
-          label={`${repo.issues.medium} Orta`}
-          variant="outlined"
-          sx={{ borderColor: '#F59E0B40', color: '#F59E0B' }}
-        />
-        <Chip
-          icon={<BugReportIcon sx={{ color: '#10B981 !important' }} />}
-          label={`${repo.issues.low} Düşük`}
-          variant="outlined"
-          sx={{ borderColor: '#10B98140', color: '#10B981' }}
-        />
-      </Box>
-
-      <Menu
-        anchorEl={anchorEl}
-        open={Boolean(anchorEl)}
-        onClose={() => setAnchorEl(null)}
-        onClick={(e) => e.stopPropagation()} // Prevent card click when clicking menu items
-        PaperProps={{
-          elevation: 0,
-          sx: {
-            filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.12))',
-            mt: 1.5,
+          height: 6,
+          borderRadius: 3,
+          bgcolor: alpha(color, 0.1),
+          '& .MuiLinearProgress-bar': {
+            bgcolor: color,
+            borderRadius: 3,
           },
         }}
-        transformOrigin={{ horizontal: 'right', vertical: 'top' }}
-        anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
-      >
-        <MenuItem onClick={() => setAnchorEl(null)}>
-          <RefreshIcon sx={{ mr: 2, fontSize: 20 }} />
-          Yeniden Analiz Et
-        </MenuItem>
-        <MenuItem onClick={() => {
-          setAnchorEl(null);
-          navigate(`/analysis/${repo.id}`);
-        }}>
-          <CodeIcon sx={{ mr: 2, fontSize: 20 }} />
-          Detaylı Rapor
-        </MenuItem>
-      </Menu>
-    </Paper>
+      />
+    </Box>
   );
 };
 
 const AnalysisPage = () => {
-  const [data, setData] = useState<any>(null);
-  const [filterAnchorEl, setFilterAnchorEl] = useState<null | HTMLElement>(null);
+  const theme = useTheme();
+  const navigate = useNavigate();
+  const repositories = getConnectedRepositories();
 
-  useEffect(() => {
-    setData(getAnalysisData());
-  }, []);
+  const getStatusIcon = (status: string) => {
+    switch (status) {
+      case 'healthy':
+        return <CheckCircleIcon sx={{ color: theme.palette.success.main }} />;
+      case 'warning':
+        return <WarningIcon sx={{ color: theme.palette.warning.main }} />;
+      case 'error':
+        return <ErrorIcon sx={{ color: theme.palette.error.main }} />;
+      default:
+        return <CircleIcon sx={{ color: theme.palette.grey[500] }} />;
+    }
+  };
 
-  if (!data) return <LinearProgress />;
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case 'healthy':
+        return theme.palette.success.main;
+      case 'warning':
+        return theme.palette.warning.main;
+      case 'error':
+        return theme.palette.error.main;
+      default:
+        return theme.palette.grey[500];
+    }
+  };
 
   return (
-    <Box sx={{ p: 3 }}>
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 4 }}>
-        <Typography variant="h5" sx={{ fontWeight: 600 }}>
-          Kod Analizleri
+    <Box>
+      <Box sx={{ mb: 4 }}>
+        <Typography variant="h5" sx={{ mb: 1, fontWeight: 600 }}>
+          Repository Analizleri
         </Typography>
-        <Box sx={{ display: 'flex', gap: 2 }}>
-          <Button
-            variant="contained"
-            startIcon={<RefreshIcon />}
-            sx={{ bgcolor: '#6366F1', '&:hover': { bgcolor: '#4F46E5' } }}
-          >
-            Tümünü Yenile
-          </Button>
-        </Box>
+        <Typography variant="body2" color="text.secondary">
+          Webhook ile bağlı repository'lerin analiz sonuçları
+        </Typography>
       </Box>
 
-      <Box sx={{ 
-        display: 'grid',
-        gridTemplateColumns: {
-          xs: '1fr',
-          sm: 'repeat(2, 1fr)',
-          md: 'repeat(4, 1fr)'
-        },
-        gap: 3,
-        mb: 4
-      }}>
-        <MetricCard
-          title="Ortalama Kod Kalitesi"
-          value={85.4}
-          icon={<CodeIcon />}
-          color="#6366F1"
-        />
-        <MetricCard
-          title="Test Kapsamı"
-          value={76.8}
-          icon={<SpeedIcon />}
-          color="#10B981"
-        />
-        <MetricCard
-          title="Toplam Issue"
-          value={data.repositories.reduce((acc: number, repo: any) => 
-            acc + repo.issues.high + repo.issues.medium + repo.issues.low, 0
-          )}
-          icon={<BugReportIcon />}
-          color="#F59E0B"
-        />
-        <MetricCard
-          title="Performans Skoru"
-          value={92.3}
-          icon={<TrendingUpIcon />}
-          color="#EC4899"
-        />
-      </Box>
+      <Grid container spacing={3}>
+        {repositories.map((repo) => (
+          <Grid item xs={12} key={repo.id}>
+            <Paper
+              elevation={0}
+              sx={{
+                p: 3,
+                border: `1px solid ${theme.palette.divider}`,
+                borderRadius: 2,
+                '&:hover': {
+                  borderColor: theme.palette.primary.main,
+                  bgcolor: alpha(theme.palette.primary.main, 0.03),
+                },
+                cursor: 'pointer',
+                transition: 'all 0.2s ease-in-out',
+              }}
+              onClick={() => navigate(`/analysis/${repo.id}`)}
+            >
+              <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 2 }}>
+                <Box sx={{ flex: 1 }}>
+                  {/* Header */}
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 3 }}>
+                    <Box>
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 0.5 }}>
+                        <Typography variant="h6">
+                          {repo.name}
+                        </Typography>
+                        <Tooltip title={`Status: ${repo.status}`}>
+                          {getStatusIcon(repo.status)}
+                        </Tooltip>
+                      </Box>
+                      <Typography variant="body2" color="text.secondary">
+                        {repo.description}
+                      </Typography>
+                    </Box>
+                  </Box>
 
-      <Box sx={{ mb: 4, display: 'flex', gap: 2 }}>
-        <TextField
-          placeholder="Repository ara..."
-          variant="outlined"
-          size="small"
-          fullWidth
-          InputProps={{
-            startAdornment: (
-              <InputAdornment position="start">
-                <SearchIcon sx={{ color: 'text.secondary' }} />
-              </InputAdornment>
-            ),
-          }}
-          sx={{
-            maxWidth: 300,
-            '& .MuiOutlinedInput-root': {
-              bgcolor: 'background.paper',
-            },
-          }}
-        />
-        <Button
-          variant="outlined"
-          startIcon={<FilterListIcon />}
-          onClick={(e) => setFilterAnchorEl(e.currentTarget)}
-          sx={{ color: 'text.primary', borderColor: 'divider' }}
-        >
-          Filtrele
-        </Button>
-      </Box>
+                  {/* Metrics */}
+                  <Grid container spacing={3} sx={{ mb: 3 }}>
+                    <Grid item xs={12} sm={6} md={3}>
+                      <MetricProgress value={repo.metrics.codeQuality} label="Code Quality" />
+                    </Grid>
+                    <Grid item xs={12} sm={6} md={3}>
+                      <MetricProgress value={repo.metrics.coverage} label="Test Coverage" />
+                    </Grid>
+                    <Grid item xs={12} sm={6} md={3}>
+                      <MetricProgress value={repo.metrics.performance} label="Performance" />
+                    </Grid>
+                    <Grid item xs={12} sm={6} md={3}>
+                      <MetricProgress value={repo.metrics.security} label="Security" />
+                    </Grid>
+                  </Grid>
 
-      <Stack spacing={2}>
-        {data.repositories.map((repo: any) => (
-          <RepositoryAnalysis key={repo.id} repo={repo} />
+                  {/* Stats */}
+                  <Stack direction="row" spacing={3} alignItems="center">
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                      <CommitIcon sx={{ fontSize: 16, color: 'text.secondary' }} />
+                      <Typography variant="body2" color="text.secondary">
+                        {repo.recentCommits} commits
+                      </Typography>
+                    </Box>
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                      <CallSplitIcon sx={{ fontSize: 16, color: 'text.secondary' }} />
+                      <Typography variant="body2" color="text.secondary">
+                        {repo.openPRs} open PRs
+                      </Typography>
+                    </Box>
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                      <CodeIcon sx={{ fontSize: 16, color: 'text.secondary' }} />
+                      <Typography variant="body2" color="text.secondary">
+                        {repo.language}
+                      </Typography>
+                    </Box>
+                    <Typography variant="body2" color="text.secondary">
+                      Son analiz: {new Date(repo.lastAnalysis).toLocaleDateString()}
+                    </Typography>
+                  </Stack>
+                </Box>
+
+                {/* Actions */}
+                <Box sx={{ display: 'flex', gap: 1 }}>
+                  <Tooltip title="Detaylı Analiz">
+                    <IconButton
+                      size="small"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        navigate(`/analysis/${repo.id}`);
+                      }}
+                      sx={{
+                        color: theme.palette.text.secondary,
+                        '&:hover': {
+                          color: theme.palette.primary.main,
+                        },
+                      }}
+                    >
+                      <LaunchIcon />
+                    </IconButton>
+                  </Tooltip>
+                  <Tooltip title="GitHub'da Görüntüle">
+                    <IconButton
+                      size="small"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        window.open(repo.html_url, '_blank');
+                      }}
+                      sx={{
+                        color: theme.palette.text.secondary,
+                        '&:hover': {
+                          color: theme.palette.primary.main,
+                        },
+                      }}
+                    >
+                      <GitHubIcon />
+                    </IconButton>
+                  </Tooltip>
+                </Box>
+              </Box>
+            </Paper>
+          </Grid>
         ))}
-      </Stack>
-
-      <Menu
-        anchorEl={filterAnchorEl}
-        open={Boolean(filterAnchorEl)}
-        onClose={() => setFilterAnchorEl(null)}
-        PaperProps={{
-          elevation: 0,
-          sx: {
-            filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.12))',
-            mt: 1.5,
-            minWidth: 200,
-          },
-        }}
-      >
-        <MenuItem>Tüm Repolar</MenuItem>
-        <MenuItem>Sadece Kritik Sorunlar</MenuItem>
-        <MenuItem>Son 7 Gün</MenuItem>
-        <MenuItem>Son 30 Gün</MenuItem>
-      </Menu>
+      </Grid>
     </Box>
   );
 };

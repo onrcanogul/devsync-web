@@ -17,8 +17,6 @@ import {
   Dashboard as DashboardIcon,
   Analytics as AnalyticsIcon,
   GitHub as GitHubIcon,
-  Code as CodeIcon,
-  BugReport as BugReportIcon,
   Settings as SettingsIcon,
   Add as AddIcon,
 } from '@mui/icons-material';
@@ -34,10 +32,8 @@ const DRAWER_COLLAPSED_WIDTH = 72;
 
 const menuItems = [
   { title: 'Dashboard', icon: <DashboardIcon />, path: '/' },
-  { title: 'Analizler', icon: <AnalyticsIcon />, path: '/analysis' },
   { title: 'Repositories', icon: <GitHubIcon />, path: '/repositories' },
-  { title: 'Code Review', icon: <CodeIcon />, path: '/code-review' },
-  { title: 'Issues', icon: <BugReportIcon />, path: '/issues' },
+  { title: 'Analizler', icon: <AnalyticsIcon />, path: '/analysis' },
   { title: 'Ayarlar', icon: <SettingsIcon />, path: '/settings' },
 ];
 
