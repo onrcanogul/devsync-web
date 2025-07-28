@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Box,
   Typography,
@@ -13,7 +13,8 @@ import {
   Tooltip,
   useTheme,
   alpha,
-  Stack
+  Stack,
+  Alert
 } from '@mui/material';
 import {
   Search as SearchIcon,
@@ -22,14 +23,27 @@ import {
   FilterList as FilterIcon
 } from '@mui/icons-material';
 import { UserRepositories } from '../components/UserRepositories';
+import { authService } from '../services/authService';
+import { useNavigate } from 'react-router-dom';
 
 type SortOption = 'updated' | 'stars' | 'name';
 
 const RepositoriesPage = () => {
   const theme = useTheme();
-  const [username] = useState('onrcanogul');
+  const navigate = useNavigate();
   const [sortBy, setSortBy] = useState<SortOption>('updated');
   const [searchQuery, setSearchQuery] = useState('');
+  const currentUser = authService.getCurrentUser();
+
+  useEffect(() => {
+    if (!currentUser) {
+      navigate('/login');
+    }
+  }, [currentUser, navigate]);
+
+  if (!currentUser) {
+    return null;
+  }
 
   const handleSearch = (event: React.FormEvent) => {
     event.preventDefault();
@@ -133,6 +147,30 @@ const RepositoriesPage = () => {
         </Box>
       </Paper>
 
+      {/* User Info */}
+      <Paper
+        elevation={0}
+        sx={{
+          p: 2,
+          mb: 3,
+          border: `1px solid ${theme.palette.divider}`,
+          borderRadius: 2,
+          display: 'flex',
+          alignItems: 'center',
+          gap: 2
+        }}
+      >
+        <Typography variant="body2" color="text.secondary">
+          Logged in as:
+        </Typography>
+        <Typography variant="body2" fontWeight="medium">
+          {currentUser.username}
+        </Typography>
+        <Typography variant="body2" color="text.secondary">
+          ({currentUser.email})
+        </Typography>
+      </Paper>
+
       {/* Repositories List */}
       <Paper
         elevation={0}
@@ -144,7 +182,7 @@ const RepositoriesPage = () => {
       >
         <Box sx={{ p: 2 }}>
           <UserRepositories 
-            username={username}
+            username={currentUser.username}
             searchQuery={searchQuery}
             sortBy={sortBy}
           />

@@ -1,7 +1,8 @@
 import axios from 'axios';
 import { GitHubRepository, RepositoryAddResponse } from '../types/repository';
+import { authService } from './authService';
 
-const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://localhost:3001';
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://localhost:8081';
 
 export const repositoryService = {
   // GitHub repository'yi doğrula ve ekle
@@ -55,6 +56,29 @@ export const repositoryService = {
       return response.data;
     } catch (error) {
       throw new Error('Repository bilgileri alınamadı');
+    }
+  },
+
+  // Repository'ye webhook ekle
+  async addWebhook(owner: string, repo: string): Promise<void> {
+    try {
+      const githubAccessToken = authService.getToken();
+      if (!githubAccessToken) {
+        throw new Error('GitHub access token bulunamadı');
+      }
+
+      await axios.post(`${API_BASE_URL}/api/git/add-webhook`, null, {
+        params: {
+          accessToken: githubAccessToken,
+          owner,
+          repo
+        }
+      });
+    } catch (error) {
+      if (error instanceof Error) {
+        throw new Error(error.message || 'Webhook eklenirken bir hata oluştu');
+      }
+      throw new Error('Webhook eklenirken bir hata oluştu');
     }
   }
 }; 
