@@ -12,6 +12,7 @@ export interface CurrentUser {
   username: string;
   githubId: string;
   email: string;
+  avatarUrl: string;
 }
 
 export const authService = {
@@ -84,7 +85,8 @@ export const authService = {
     return {
       username: decoded.sub,
       githubId: decoded.githubId,
-      email: decoded.email
+      email: decoded.email,
+      avatarUrl: decoded.avatarUrl || `https://avatars.githubusercontent.com/u/${decoded.githubId}`
     };
   },
 

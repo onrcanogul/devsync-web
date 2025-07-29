@@ -393,37 +393,79 @@ export const getRepositoryAnalysis = (id: number) => {
 };
 
 // Analizler için mock data
-export const getAnalysisData = () => ({
-  repositories: Array.from({ length: 8 }, () => ({
-    id: generateId(),
-    name: randomElement(['auth-service', 'payment-api', 'user-interface', 'data-processor']),
-    metrics: {
-      codeQuality: randomInt(70, 100),
-      coverage: randomInt(60, 100),
-      performance: randomInt(75, 100),
-    },
-    lastAnalysis: randomDate(14),
-    status: randomElement(['completed', 'in_progress', 'queued']),
-    issues: {
-      high: randomInt(0, 5),
-      medium: randomInt(1, 10),
-      low: randomInt(2, 15),
-    },
-  })),
-  trends: {
-    weekly: Array.from({ length: 7 }, () => ({
-      date: randomDate(7),
-      issues: randomInt(5, 30),
-      fixes: randomInt(3, 25),
+export const getAnalysisData = () => {
+  const technicalComments = [
+    "Code follows SOLID principles and implements clean architecture patterns",
+    "Technical debt identified in authentication module",
+    "Efficient database query optimizations implemented",
+    "Memory management improvements needed in data processing",
+    "Well-structured microservice architecture with clear boundaries"
+  ];
+
+  const functionalComments = [
+    "User authentication flow meets business requirements",
+    "Payment processing validation needs enhancement",
+    "Search functionality performs as expected",
+    "Data export feature requires additional error handling",
+    "User feedback system successfully implemented"
+  ];
+
+  const architecturalComments = [
+    "Microservices properly segregated with clear domain boundaries",
+    "API gateway pattern effectively implemented",
+    "Consider implementing event sourcing for better scalability",
+    "Service mesh architecture could improve system reliability",
+    "Database sharding strategy needs review"
+  ];
+
+  return {
+    repositories: Array.from({ length: 8 }, () => ({
+      id: generateId(),
+      name: randomElement(REPOSITORY_NAMES),
+      branch: `feature/${randomElement(['auth', 'payment', 'user', 'data'])}`,
+      pusher: randomElement(USERNAMES),
+      headCommitMessage: `${randomElement(['Add', 'Update', 'Fix', 'Refactor'])} ${randomElement(['feature', 'bug', 'documentation', 'tests'])}`,
+      headCommitSha: generateId(),
+      commitCount: randomInt(1, 10),
+      analysis: {
+        id: generateId(),
+        technicalComment: randomElement(technicalComments),
+        functionalComment: randomElement(functionalComments),
+        architecturalComment: randomElement(architecturalComments),
+        riskScore: randomInt(1, 100)
+      },
+      createdBy: {
+        githubId: randomInt(1000, 9999),
+        username: randomElement(USERNAMES),
+        avatarUrl: randomElement(AVATARS),
+        email: `${randomElement(USERNAMES).toLowerCase().replace(' ', '.')}@example.com`,
+        userType: 'User'
+      },
+      solves: Array.from({ length: randomInt(0, 3) }, () => randomInt(100, 999)),
+      repository: generateMockRepository(),
+      lastAnalysis: randomDate(14),
+      status: randomElement(['completed', 'in_progress', 'queued']),
+      issues: {
+        high: randomInt(0, 5),
+        medium: randomInt(1, 10),
+        low: randomInt(2, 15),
+      },
     })),
-    languages: [
-      { name: 'TypeScript', percentage: 45 },
-      { name: 'Python', percentage: 25 },
-      { name: 'Java', percentage: 20 },
-      { name: 'Other', percentage: 10 },
-    ],
-  },
-});
+    trends: {
+      weekly: Array.from({ length: 7 }, () => ({
+        date: randomDate(7),
+        issues: randomInt(5, 30),
+        fixes: randomInt(3, 25),
+      })),
+      languages: [
+        { name: 'TypeScript', percentage: 45 },
+        { name: 'Python', percentage: 25 },
+        { name: 'Java', percentage: 20 },
+        { name: 'Other', percentage: 10 },
+      ],
+    },
+  };
+};
 
 // Repositories için mock data
 export const getRepositoriesData = () => ({

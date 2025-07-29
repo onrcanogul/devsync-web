@@ -11,6 +11,7 @@ import {
   useTheme,
   alpha,
   Chip,
+  Divider,
 } from '@mui/material';
 import {
   ArrowBack as ArrowBackIcon,
@@ -18,7 +19,9 @@ import {
   Commit as CommitIcon,
   Code as CodeIcon,
   BugReport as BugReportIcon,
-  Architecture as ArchitectureIcon
+  Architecture as ArchitectureIcon,
+  Functions as FunctionsIcon,
+  Terminal as TerminalIcon,
 } from '@mui/icons-material';
 import { PullRequestNode } from '../types/analysis';
 
@@ -33,10 +36,16 @@ const RiskScoreChip: React.FC<RiskScoreChipProps> = ({ score }) => {
     if (score <= 70) return theme.palette.warning.main;
     return theme.palette.error.main;
   };
+
+  const getLabel = () => {
+    if (score <= 30) return 'Düşük Risk';
+    if (score <= 70) return 'Orta Risk';
+    return 'Yüksek Risk';
+  };
   
   return (
     <Chip
-      label={`Risk Score: ${score}%`}
+      label={`${getLabel()} (${score})`}
       size="small"
       sx={{
         bgcolor: alpha(getColor(), 0.1),
@@ -80,7 +89,7 @@ const CommentSection: React.FC<{
           {title}
         </Typography>
       </Box>
-      <Typography variant="body1" sx={{ whiteSpace: 'pre-wrap' }}>
+      <Typography variant="body1" sx={{ whiteSpace: 'pre-wrap', color: 'text.secondary' }}>
         {content}
       </Typography>
     </Paper>
@@ -183,26 +192,37 @@ const AnalysisDetailPage = () => {
             p: 2,
             border: `1px solid ${theme.palette.divider}`,
             borderRadius: 2,
-            display: 'flex',
-            alignItems: 'center',
-            gap: 3
           }}
         >
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-            <CommitIcon sx={{ fontSize: 20, color: 'text.secondary' }} />
-            <Typography variant="body2">
-              {analysis.commitCount} commits
-            </Typography>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 3, mb: 2 }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+              <CommitIcon sx={{ fontSize: 20, color: 'text.secondary' }} />
+              <Typography variant="body2">
+                {analysis.commitCount} commits
+              </Typography>
+            </Box>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+              <CodeIcon sx={{ fontSize: 20, color: 'text.secondary' }} />
+              <Typography variant="body2">
+                Branch: {analysis.branch}
+              </Typography>
+            </Box>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+              <Typography variant="body2" color="text.secondary">
+                by {analysis.createdBy?.username}
+              </Typography>
+            </Box>
           </Box>
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-            <CodeIcon sx={{ fontSize: 20, color: 'text.secondary' }} />
-            <Typography variant="body2">
-              Branch: {analysis.branch}
+          <Divider />
+          <Box sx={{ mt: 2 }}>
+            <Typography variant="subtitle2" gutterBottom>
+              Son Commit
             </Typography>
-          </Box>
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
             <Typography variant="body2" color="text.secondary">
-              by {analysis.createdBy?.username}
+              {analysis.headCommitMessage}
+            </Typography>
+            <Typography variant="caption" color="text.secondary">
+              SHA: {analysis.headCommitSha}
             </Typography>
           </Box>
         </Paper>
@@ -214,7 +234,7 @@ const AnalysisDetailPage = () => {
           <CommentSection
             title="Technical Analysis"
             content={analysis.analysis.technicalComment}
-            icon={<CodeIcon />}
+            icon={<TerminalIcon />}
             color={theme.palette.primary.main}
           />
         </Grid>
@@ -222,8 +242,8 @@ const AnalysisDetailPage = () => {
           <CommentSection
             title="Functional Analysis"
             content={analysis.analysis.functionalComment}
-            icon={<BugReportIcon />}
-            color={theme.palette.success.main}
+            icon={<FunctionsIcon />}
+            color={theme.palette.secondary.main}
           />
         </Grid>
         <Grid item xs={12}>
@@ -231,7 +251,7 @@ const AnalysisDetailPage = () => {
             title="Architectural Analysis"
             content={analysis.analysis.architecturalComment}
             icon={<ArchitectureIcon />}
-            color={theme.palette.warning.main}
+            color={theme.palette.info.main}
           />
         </Grid>
       </Grid>

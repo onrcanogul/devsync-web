@@ -21,14 +21,15 @@ import {
   Add as AddIcon,
 } from '@mui/icons-material';
 import { useNavigate, useLocation } from 'react-router-dom';
+import Logo from './Logo';
 
 interface SidebarProps {
   open: boolean;
   onToggle: () => void;
 }
 
-const DRAWER_WIDTH = 240;
-const DRAWER_COLLAPSED_WIDTH = 72;
+const DRAWER_WIDTH = 280;
+const DRAWER_COLLAPSED_WIDTH = 80;
 
 const menuItems = [
   { title: 'Dashboard', icon: <DashboardIcon />, path: '/' },
@@ -67,37 +68,40 @@ const Sidebar: React.FC<SidebarProps> = ({ open, onToggle }) => {
         sx={{
           display: 'flex',
           alignItems: 'center',
-          justifyContent: open ? 'flex-end' : 'center',
-          padding: theme.spacing(1),
+          justifyContent: open ? 'space-between' : 'flex-end',
+          padding: theme.spacing(2),
+          minHeight: 72,
         }}
       >
-        <IconButton onClick={onToggle}>
+        {open && (
+          <Box 
+            sx={{ 
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              ml: 1,
+            }} 
+            onClick={() => navigate('/')}
+          >
+            <Logo size="small" showText />
+          </Box>
+        )}
+        <IconButton 
+          onClick={onToggle}
+          sx={{
+            ...(open ? {} : { mx: 'auto' }),
+            '&:hover': {
+              bgcolor: 'rgba(0, 0, 0, 0.04)',
+            },
+          }}
+        >
           {open ? <ChevronLeftIcon /> : <ChevronRightIcon />}
         </IconButton>
       </Box>
       
       <Divider />
 
-      {open && (
-        <Box sx={{ p: 2 }}>
-          <Button
-            fullWidth
-            variant="contained"
-            startIcon={<AddIcon />}
-            onClick={() => navigate('/repositories/add')}
-            sx={{
-              bgcolor: '#6366F1',
-              '&:hover': { bgcolor: '#4F46E5' },
-              borderRadius: 2,
-              textTransform: 'none',
-            }}
-          >
-            Repository Ekle
-          </Button>
-        </Box>
-      )}
-
-      <List>
+      <List sx={{ mt: 1 }}>
         {menuItems.map((item) => {
           const isActive = location.pathname === item.path;
           return (
@@ -107,6 +111,8 @@ const Sidebar: React.FC<SidebarProps> = ({ open, onToggle }) => {
               sx={{
                 cursor: 'pointer',
                 bgcolor: isActive ? 'action.selected' : 'transparent',
+                borderRadius: '8px',
+                mx: 1,
                 '&:hover': {
                   bgcolor: 'action.hover',
                 },
@@ -118,6 +124,8 @@ const Sidebar: React.FC<SidebarProps> = ({ open, onToggle }) => {
                 sx={{
                   minWidth: 40,
                   color: isActive ? 'primary.main' : 'text.secondary',
+                  display: 'flex',
+                  justifyContent: 'center',
                 }}
               >
                 {item.icon}
@@ -127,6 +135,9 @@ const Sidebar: React.FC<SidebarProps> = ({ open, onToggle }) => {
                   primary={item.title}
                   sx={{
                     color: isActive ? 'text.primary' : 'text.secondary',
+                    '& .MuiTypography-root': {
+                      fontWeight: isActive ? 600 : 400,
+                    },
                   }}
                 />
               )}

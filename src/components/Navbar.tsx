@@ -23,6 +23,7 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import SearchIcon from '@mui/icons-material/Search';
 import { useNavigate } from 'react-router-dom';
 import { useTheme } from '../hooks/useTheme';
+import { authService } from '../services/authService';
 
 interface NavbarProps {
   onThemeToggle: () => void;
@@ -34,6 +35,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onThemeToggle }) => {
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
+  const currentUser = authService.getCurrentUser();
 
   const handleProfileClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -44,6 +46,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onThemeToggle }) => {
   };
 
   const handleLogout = () => {
+    authService.logout();
     handleClose();
     navigate('/login');
   };
@@ -68,14 +71,6 @@ export const Navbar: React.FC<NavbarProps> = ({ onThemeToggle }) => {
         </Box>
 
         <Stack direction="row" spacing={1} alignItems="center">
-          <Tooltip title="Bildirimler">
-            <IconButton color="inherit" size="large">
-              <Badge badgeContent={3} color="error">
-                <NotificationsIcon />
-              </Badge>
-            </IconButton>
-          </Tooltip>
-
           <Tooltip title={mode === 'dark' ? 'Açık Tema' : 'Koyu Tema'}>
             <IconButton onClick={onThemeToggle} color="inherit" size="large">
               {mode === 'dark' ? <Brightness7Icon /> : <Brightness4Icon />}
@@ -92,6 +87,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onThemeToggle }) => {
               aria-expanded={open ? 'true' : undefined}
             >
               <Avatar 
+                src={currentUser?.avatarUrl}
                 sx={{ 
                   width: 32, 
                   height: 32,
@@ -129,11 +125,10 @@ export const Navbar: React.FC<NavbarProps> = ({ onThemeToggle }) => {
           anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
         >
           <MenuItem onClick={handleClose}>
-            <ListItemIcon>
-              <PersonIcon fontSize="small" />
-            </ListItemIcon>
-            Profilim
+            <Avatar src={currentUser?.avatarUrl} />
+            {currentUser?.username || 'Kullanıcı'}
           </MenuItem>
+          <Divider />
           <MenuItem onClick={() => navigate('/settings')}>
             <ListItemIcon>
               <SettingsIcon fontSize="small" />

@@ -3,6 +3,7 @@ interface JwtPayload {
   githubId: string;
   email: string;
   accessToken: string;
+  avatarUrl?: string;
   exp: number;
   iat: number;
 }

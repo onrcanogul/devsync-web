@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card, CardContent, Typography, Box, Chip, Avatar } from '@mui/material';
+import { Card, CardContent, Typography, Box, Chip, Avatar, Divider } from '@mui/material';
 import { PullRequestNode } from '../types/analysis';
 import { useNavigate } from 'react-router-dom';
 
@@ -40,9 +40,32 @@ export const AnalysisCard: React.FC<AnalysisCardProps> = ({ node }) => {
           </Box>
         </Box>
 
-        <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-          {node.analysis.technicalComment}
-        </Typography>
+        <Box sx={{ mb: 2 }}>
+          <Typography variant="subtitle2" color="primary" gutterBottom>
+            Technical Analysis
+          </Typography>
+          <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
+            {node.analysis.technicalComment}
+          </Typography>
+          
+          <Divider sx={{ my: 1 }} />
+          
+          <Typography variant="subtitle2" color="primary" gutterBottom>
+            Functional Analysis
+          </Typography>
+          <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
+            {node.analysis.functionalComment}
+          </Typography>
+          
+          <Divider sx={{ my: 1 }} />
+          
+          <Typography variant="subtitle2" color="primary" gutterBottom>
+            Architectural Analysis
+          </Typography>
+          <Typography variant="body2" color="text.secondary">
+            {node.analysis.architecturalComment}
+          </Typography>
+        </Box>
 
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <Box>
@@ -62,7 +85,7 @@ export const AnalysisCard: React.FC<AnalysisCardProps> = ({ node }) => {
             <Chip 
               size="small" 
               label={`Risk: ${node.analysis.riskScore}`} 
-              color={node.analysis.riskScore > 5 ? 'error' : 'success'} 
+              color={node.analysis.riskScore > 50 ? 'error' : 'success'} 
               variant="outlined" 
             />
           </Box>

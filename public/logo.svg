@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="512" height="512" rx="128" fill="#111827"/>
+  <g transform="translate(96, 128) scale(1.3)">
+    <!-- Left bracket -->
+    <path d="M40 100L80 60V40L20 100L80 160V140L40 100Z" fill="#818CF8"/>
+    <!-- Forward slash -->
+    <path d="M100 40L140 160H120L80 40H100Z" fill="#818CF8"/>
+    <!-- Equal signs -->
+    <path d="M160 80H220V100H160V80ZM160 120H220V140H160V120Z" fill="#34D399"/>
+  </g>
+  <g transform="translate(256, 180) scale(1.2)">
+    <!-- "devsync" text -->
+    <path d="M20 120C8.954 120 0 111.046 0 100C0 88.954 8.954 80 20 80C31.046 80 40 88.954 40 100C40 111.046 31.046 120 20 120Z" fill="#1E40AF"/>
+  </g>
+</svg> 
