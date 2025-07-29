@@ -25,4 +25,17 @@ export interface RepositoryAddResponse {
   webhook: WebhookConfig;
   success: boolean;
   message: string;
+}
+
+export interface RepositoryFromGraph {
+    id: number;
+    name: string;
+    fullName: string;
+    htmlUrl: string;
+    visibility: string;
+    language: string;
+    description: string;
+    defaultBranch: string;
+    ownerLogin: string;
+    ownerId: number;
 } 

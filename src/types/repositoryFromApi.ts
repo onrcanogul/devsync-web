@@ -58,6 +58,6 @@ export interface RepositoryFromApi {
     default_branch: string;
     stargazers: number;
     master_branch?: string;
-    // Webhook durumu için yeni alan
+    hasTargetWebhook: boolean;
     is_connected: boolean;
 } 

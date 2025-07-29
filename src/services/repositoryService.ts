@@ -1,10 +1,21 @@
 import axios from 'axios';
-import { GitHubRepository, RepositoryAddResponse } from '../types/repository';
+import { GitHubRepository, RepositoryAddResponse, RepositoryFromGraph } from '../types/repository';
 import { authService } from './authService';
 
 const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://localhost:8081';
 
 export const repositoryService = {
+  // Get connected repositories for a user
+  async getConnectedRepositories(username: string): Promise<RepositoryFromGraph[]> {
+    try {
+      const response = await axios.get<RepositoryFromGraph[]>(`http://localhost:8085/api/context-graph/repo/${username}`);
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching connected repositories:', error);
+      return [];
+    }
+  },
+
   // GitHub repository'yi doğrula ve ekle
   async addRepository(repoFullName: string): Promise<RepositoryAddResponse> {
     try {
@@ -67,7 +78,7 @@ export const repositoryService = {
         throw new Error('GitHub access token bulunamadı');
       }
 
-      await axios.post(`${API_BASE_URL}/api/git/add-webhook`, null, {
+      await axios.post(`${API_BASE_URL}/api/git-webhook/add-webhook`, null, {
         params: {
           accessToken: githubAccessToken,
           owner,

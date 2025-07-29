@@ -14,7 +14,11 @@ import {
     Tooltip,
     useTheme,
     alpha,
-    Snackbar
+    Snackbar,
+    tooltipClasses,
+    TooltipProps,
+    styled,
+    Theme
 } from '@mui/material';
 import {
     Star as StarIcon,
@@ -29,6 +33,7 @@ import {
     LinkOff as LinkOffIcon
 } from '@mui/icons-material';
 import { RepositoryFromApi } from '../types/repositoryFromApi';
+import { RepositoryFromGraph } from '../types/repository';
 import { githubRepositoryService } from '../services/githubRepositoryService';
 import { repositoryService } from '../services/repositoryService';
 
@@ -53,6 +58,22 @@ const languageColors: { [key: string]: string } = {
     Shell: '#89E051'
 };
 
+// Custom styled tooltip
+const CustomTooltip = styled(({ className, ...props }: TooltipProps) => (
+    <Tooltip {...props} classes={{ popper: className }} />
+))(({ theme }: { theme: Theme }) => ({
+    [`& .${tooltipClasses.tooltip}`]: {
+        backgroundColor: '#1a1a1a',
+        maxWidth: 300,
+        padding: theme.spacing(1.5),
+        borderRadius: theme.spacing(1),
+        boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+    },
+    [`& .${tooltipClasses.arrow}`]: {
+        color: '#1a1a1a'
+    }
+}));
+
 export const UserRepositories: React.FC<UserRepositoriesProps> = ({ 
     username,
     searchQuery = '',
@@ -73,22 +94,22 @@ export const UserRepositories: React.FC<UserRepositoriesProps> = ({
     });
 
     useEffect(() => {
-        const fetchRepositories = async () => {
+        const fetchData = async () => {
             try {
                 setLoading(true);
                 setError(null);
-                const data = await githubRepositoryService.getUserRepositories(username);
-                setRepositories(data);
+                const reposData = await githubRepositoryService.getUserRepositories(username);
+                setRepositories(reposData);
             } catch (err) {
-                setError('Repositories yüklenirken bir hata oluştu.');
-                console.error('Error fetching repositories:', err);
+                setError('Error loading repositories.');
+                console.error('Error fetching data:', err);
             } finally {
                 setLoading(false);
             }
         };
 
         if (username) {
-            fetchRepositories();
+            fetchData();
         }
     }, [username]);
 
@@ -97,25 +118,25 @@ export const UserRepositories: React.FC<UserRepositoriesProps> = ({
             const [owner, repoName] = repo.full_name.split('/');
             await repositoryService.addWebhook(owner, repoName);
             
-            // Başarılı bağlantı sonrası repository'yi güncelle
+            // Update the repository's webhook status locally
             setRepositories(prevRepos => 
                 prevRepos.map(r => 
-                    r.id === repo.id ? { ...r, is_connected: true } : r
+                    r.id === repo.id ? { ...r, hasTargetWebhook: true } : r
                 )
             );
 
             setSnackbar({
                 open: true,
-                message: 'Repository başarıyla DevSync\'e bağlandı',
+                message: 'Repository successfully connected to DevSync',
                 severity: 'success'
             });
         } catch (error) {
-            console.error('Error connecting repository:', error);
             setSnackbar({
                 open: true,
-                message: error instanceof Error ? error.message : 'Repository bağlanırken bir hata oluştu',
+                message: 'Error connecting repository to DevSync',
                 severity: 'error'
             });
+            console.error('Error connecting repository:', error);
         }
     };
 
@@ -129,17 +150,18 @@ export const UserRepositories: React.FC<UserRepositoriesProps> = ({
         const diffTime = Math.abs(now.getTime() - date.getTime());
         const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
-        if (diffDays === 1) return 'Dün güncellendi';
-        if (diffDays < 7) return `${diffDays} gün önce güncellendi`;
-        if (diffDays < 30) return `${Math.floor(diffDays / 7)} hafta önce güncellendi`;
-        if (diffDays < 365) return `${Math.floor(diffDays / 30)} ay önce güncellendi`;
-        return `${Math.floor(diffDays / 365)} yıl önce güncellendi`;
+        if (diffDays < 1) return 'Updated today';
+        if (diffDays === 1) return 'Updated yesterday';
+        if (diffDays < 7) return `Updated ${diffDays} days ago`;
+        if (diffDays < 30) return `Updated ${Math.floor(diffDays / 7)} weeks ago`;
+        if (diffDays < 365) return `Updated ${Math.floor(diffDays / 30)} months ago`;
+        return `Updated ${Math.floor(diffDays / 365)} years ago`;
     };
 
     const filteredAndSortedRepositories = useMemo(() => {
         let result = [...repositories];
 
-        // Arama filtrelemesi
+        // Search filtering
         if (searchQuery) {
             const query = searchQuery.toLowerCase();
             result = result.filter(repo => 
@@ -149,7 +171,7 @@ export const UserRepositories: React.FC<UserRepositoriesProps> = ({
             );
         }
 
-        // Sıralama
+        // Sorting
         result.sort((a, b) => {
             switch (sortBy) {
                 case 'updated':
@@ -191,8 +213,8 @@ export const UserRepositories: React.FC<UserRepositoriesProps> = ({
                 <GitHubIcon sx={{ fontSize: 48, color: 'text.secondary' }} />
                 <Typography color="text.secondary" variant="body1">
                     {searchQuery 
-                        ? 'Arama kriterlerine uygun repository bulunamadı.' 
-                        : 'Henüz repository bulunmuyor.'}
+                        ? 'No repositories found matching your search criteria.' 
+                        : 'No repositories found.'}
                 </Typography>
             </Box>
         );
@@ -201,7 +223,7 @@ export const UserRepositories: React.FC<UserRepositoriesProps> = ({
     return (
         <>
             <Grid container spacing={2}>
-                {filteredAndSortedRepositories.map((repo) => (
+                {filteredAndSortedRepositories.map(repo => (
                     <Grid item xs={12} key={repo.id}>
                         <Card 
                             sx={{ 
@@ -241,104 +263,79 @@ export const UserRepositories: React.FC<UserRepositoriesProps> = ({
                                                     size="small" 
                                                     label="Fork"
                                                     icon={<ForkIcon sx={{ fontSize: 16 }} />}
-                                                    sx={{ 
-                                                        bgcolor: alpha(theme.palette.primary.main, 0.1),
-                                                        color: theme.palette.primary.main
-                                                    }}
+                                                    sx={{ height: 24 }}
                                                 />
                                             )}
-                                            {repo.is_connected && (
-                                                <Tooltip title="DevSync'e Bağlı">
-                                                    <Chip 
-                                                        size="small" 
-                                                        label="Bağlı"
+                                            {repo.hasTargetWebhook && (
+                                                <CustomTooltip 
+                                                    title={
+                                                        <Box>
+                                                            <Typography 
+                                                                variant="subtitle2" 
+                                                                sx={{ 
+                                                                    color: '#fff',
+                                                                    fontWeight: 500,
+                                                                    mb: 1
+                                                                }}
+                                                            >
+                                                                Connected to DevSync
+                                                            </Typography>
+                                                            <Typography 
+                                                                variant="caption"
+                                                                sx={{ 
+                                                                    color: '#8b949e',
+                                                                    display: 'block',
+                                                                    lineHeight: 1.4
+                                                                }}
+                                                            >
+                                                                Note: If you remove the webhook from GitHub, the changes will be reflected in DevSync on the next day.
+                                                            </Typography>
+                                                        </Box>
+                                                    }
+                                                    arrow
+                                                    placement="top"
+                                                >
+                                                    <Chip
+                                                        size="small"
+                                                        label="Connected to DevSync"
                                                         icon={<LinkIcon sx={{ fontSize: 16 }} />}
-                                                        sx={{ 
-                                                            bgcolor: alpha(theme.palette.success.main, 0.1),
-                                                            color: theme.palette.success.main,
-                                                            '& .MuiChip-icon': {
-                                                                color: theme.palette.success.main
-                                                            }
-                                                        }}
+                                                        color="primary"
+                                                        sx={{ height: 24 }}
                                                     />
-                                                </Tooltip>
+                                                </CustomTooltip>
                                             )}
                                         </Box>
-
-                                        <Typography
-                                            variant="body2"
-                                            color="text.secondary"
-                                            sx={{ mb: 2 }}
-                                        >
-                                            {repo.description || 'No description available'}
-                                        </Typography>
-
-                                        <Stack direction="row" spacing={3} alignItems="center">
+                                        {repo.description && (
+                                            <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+                                                {repo.description}
+                                            </Typography>
+                                        )}
+                                        <Stack direction="row" spacing={2} alignItems="center">
                                             {repo.language && (
                                                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                                                    <CircleIcon 
-                                                        sx={{ 
-                                                            fontSize: 12,
-                                                            color: languageColors[repo.language] || theme.palette.grey[500]
-                                                        }} 
-                                                    />
-                                                    <Typography variant="body2" color="text.secondary">
-                                                        {repo.language}
-                                                    </Typography>
+                                                    <CircleIcon sx={{ fontSize: 12, color: languageColors[repo.language] || 'grey.500' }} />
+                                                    <Typography variant="body2">{repo.language}</Typography>
                                                 </Box>
                                             )}
-
-                                            {repo.stargazers_count > 0 && (
-                                                <Link
-                                                    href={`${repo.html_url}/stargazers`}
-                                                    target="_blank"
-                                                    rel="noopener noreferrer"
-                                                    color="inherit"
-                                                    underline="hover"
-                                                    sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}
-                                                >
-                                                    <StarIcon sx={{ fontSize: 16 }} />
-                                                    <Typography variant="body2" color="text.secondary">
-                                                        {repo.stargazers_count}
-                                                    </Typography>
-                                                </Link>
-                                            )}
-
-                                            {repo.forks_count > 0 && (
-                                                <Link
-                                                    href={`${repo.html_url}/network/members`}
-                                                    target="_blank"
-                                                    rel="noopener noreferrer"
-                                                    color="inherit"
-                                                    underline="hover"
-                                                    sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}
-                                                >
-                                                    <ForkIcon sx={{ fontSize: 16 }} />
-                                                    <Typography variant="body2" color="text.secondary">
-                                                        {repo.forks_count}
-                                                    </Typography>
-                                                </Link>
-                                            )}
-
                                             <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                                                <HistoryIcon sx={{ fontSize: 16 }} />
-                                                <Typography variant="body2" color="text.secondary">
-                                                    {formatDate(repo.updated_at)}
-                                                </Typography>
+                                                <StarIcon sx={{ fontSize: 16, color: 'text.secondary' }} />
+                                                <Typography variant="body2">{repo.stargazers_count}</Typography>
                                             </Box>
+                                            <Typography variant="body2" color="text.secondary">
+                                                {formatDate(repo.updated_at)}
+                                            </Typography>
                                         </Stack>
                                     </Box>
-
                                     <Box sx={{ display: 'flex', gap: 1 }}>
-                                        {!repo.is_connected && (
-                                            <Tooltip title="DevSync'e Bağla">
+                                        {!repo.hasTargetWebhook && (
+                                            <Tooltip title="Connect to DevSync">
                                                 <IconButton
-                                                    size="small"
                                                     onClick={() => handleConnectRepository(repo)}
+                                                    size="small"
                                                     sx={{ 
-                                                        color: theme.palette.text.secondary,
+                                                        color: theme.palette.primary.main,
                                                         '&:hover': {
-                                                            color: theme.palette.success.main
+                                                            backgroundColor: alpha(theme.palette.primary.main, 0.1)
                                                         }
                                                     }}
                                                 >
@@ -346,15 +343,16 @@ export const UserRepositories: React.FC<UserRepositoriesProps> = ({
                                                 </IconButton>
                                             </Tooltip>
                                         )}
-                                        <Tooltip title="GitHub'da Görüntüle">
+                                        <Tooltip title="View on GitHub">
                                             <IconButton
-                                                size="small"
                                                 href={repo.html_url}
                                                 target="_blank"
                                                 rel="noopener noreferrer"
+                                                size="small"
                                                 sx={{ 
-                                                    color: theme.palette.text.secondary,
+                                                    color: 'text.secondary',
                                                     '&:hover': {
+                                                        backgroundColor: alpha(theme.palette.primary.main, 0.1),
                                                         color: theme.palette.primary.main
                                                     }
                                                 }}
@@ -369,18 +367,13 @@ export const UserRepositories: React.FC<UserRepositoriesProps> = ({
                     </Grid>
                 ))}
             </Grid>
-
             <Snackbar
                 open={snackbar.open}
                 autoHideDuration={6000}
                 onClose={handleCloseSnackbar}
                 anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
             >
-                <Alert 
-                    onClose={handleCloseSnackbar} 
-                    severity={snackbar.severity}
-                    sx={{ width: '100%' }}
-                >
+                <Alert onClose={handleCloseSnackbar} severity={snackbar.severity} sx={{ width: '100%' }}>
                     {snackbar.message}
                 </Alert>
             </Snackbar>
