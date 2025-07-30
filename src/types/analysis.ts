@@ -24,7 +24,12 @@ export interface AnalysisFilters {
   size: number;
 }
 
-export interface CommitAnalysis {
+// Eski tipler (geriye dönük uyumluluk için)
+export type CommitAnalysis = CommitAnalysisNode;
+export type Commit = CommitNode;
+export type Repository = RepositoryNode;
+
+export interface CommitAnalysisNode {
   hash: string;
   technicalComment: string;
   functionalComment: string;
@@ -32,21 +37,21 @@ export interface CommitAnalysis {
   commitRiskScore: number;
 }
 
-export interface Commit {
+export interface CommitNode {
   hash: string;
   message: string;
-  analysis: CommitAnalysis;
+  analysis?: CommitAnalysisNode;
 }
 
-export interface GithubUser {
+export interface UserNode {
   githubId: number;
   username: string;
   avatarUrl: string;
-  email: string | null;
+  email: string;
   userType: string;
 }
 
-export interface Repository {
+export interface RepositoryNode {
   id: number;
   name: string;
   fullName: string;
@@ -59,6 +64,21 @@ export interface Repository {
   ownerId: number;
 }
 
+export interface IssueNode {
+  id: number;
+  title: string;
+  number: number;
+  state: string;
+}
+
+export interface PullRequestAnalysisNode {
+  id: number;
+  technicalComment: string;
+  functionalComment: string;
+  architecturalComment: string;
+  riskScore: number;
+}
+
 export interface PullRequestNode {
   id: number;
   branch: string;
@@ -66,15 +86,42 @@ export interface PullRequestNode {
   headCommitMessage: string;
   headCommitSha: string;
   commitCount: number;
-  commits: Commit[];
-  analysis: {
-    id: string | null;
-    technicalComment: string;
-    functionalComment: string;
-    architecturalComment: string;
-    riskScore: number;
+  commits: CommitNode[];
+  analysis: PullRequestAnalysisNode;
+  createdBy: UserNode;
+  solves: IssueNode[];
+  repository: RepositoryNode;
+}
+
+export interface DashboardStats {
+  totalRepositories: number;
+  activeProjects: number;
+  totalCommits: number;
+  codeReviews: number;
+}
+
+export interface DashboardActivity {
+  id: number;
+  type: 'commit' | 'pull_request' | 'issue' | 'review';
+  title: string;
+  repository: string;
+  timestamp: string;
+  user: {
+    username: string;
+    avatar: string;
   };
-  createdBy: GithubUser | null;
-  solves: number[];
-  repository: Repository;
-} 
+}
+
+export interface PopularRepository {
+  id: number;
+  name: string;
+  description: string;
+  language: string;
+  stars: number;
+}
+
+export interface DashboardData {
+  stats: DashboardStats;
+  recentActivities: DashboardActivity[];
+  popularRepositories: PopularRepository[];
+}

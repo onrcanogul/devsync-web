@@ -33,9 +33,9 @@ const DRAWER_COLLAPSED_WIDTH = 80;
 
 const menuItems = [
   { title: 'Dashboard', icon: <DashboardIcon />, path: '/' },
+  { title: 'Analysis', icon: <AnalyticsIcon />, path: '/analysis' },
   { title: 'Repositories', icon: <GitHubIcon />, path: '/repositories' },
-  { title: 'Analizler', icon: <AnalyticsIcon />, path: '/analysis' },
-  { title: 'Ayarlar', icon: <SettingsIcon />, path: '/settings' },
+  { title: 'Settings', icon: <SettingsIcon />, path: '/settings' },
 ];
 
 const Sidebar: React.FC<SidebarProps> = ({ open, onToggle }) => {

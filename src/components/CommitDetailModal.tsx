@@ -23,7 +23,7 @@ import {
   Memory as MemoryIcon,
   GitHub as GitHubIcon,
 } from '@mui/icons-material';
-import { Commit, CommitAnalysis, Repository } from '../types/analysis';
+import { CommitNode, CommitAnalysisNode, RepositoryNode } from '../types/analysis';
 
 interface CommitDetailModalProps {
   open: boolean;
@@ -43,7 +43,7 @@ interface CommitDetailModalProps {
       deletions: number;
     };
     analysis: string;
-    repository: Repository;
+    repository: RepositoryNode;
   };
 }
 

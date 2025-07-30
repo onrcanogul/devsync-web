@@ -71,12 +71,12 @@ export const ContextGraph: React.FC<ContextGraphProps> = ({ repoId, branch }) =>
               <div className="mt-2">
                 <h4 className="font-medium mb-1">Solves</h4>
                 <div className="flex flex-wrap gap-2">
-                  {node.solves.map((solveId) => (
+                  {node.solves.map((issue) => (
                     <span
-                      key={solveId}
+                      key={issue.id}
                       className="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded"
                     >
-                      #{solveId}
+                      #{issue.number} {issue.title}
                     </span>
                   ))}
                 </div>

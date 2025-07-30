@@ -63,21 +63,35 @@ export const Navbar: React.FC<NavbarProps> = ({ onThemeToggle }) => {
     >
       <Toolbar sx={{ justifyContent: 'space-between' }}>
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          <Tooltip title="Global Arama">
-            <IconButton color="inherit" size="large">
+          <Tooltip title="Global Search">
+            <IconButton 
+              sx={{ 
+                color: mode === 'dark' ? 'text.primary' : 'text.secondary'
+              }}
+              size="large"
+            >
               <SearchIcon />
             </IconButton>
           </Tooltip>
         </Box>
 
         <Stack direction="row" spacing={1} alignItems="center">
-          <Tooltip title={mode === 'dark' ? 'Açık Tema' : 'Koyu Tema'}>
-            <IconButton onClick={onThemeToggle} color="inherit" size="large">
+          <Tooltip title={mode === 'dark' ? 'Light Mode' : 'Dark Mode'}>
+            <IconButton 
+              onClick={onThemeToggle} 
+              sx={{ 
+                color: mode === 'dark' ? 'text.primary' : 'text.secondary',
+                '&:hover': {
+                  bgcolor: mode === 'dark' ? 'rgba(255, 255, 255, 0.08)' : 'rgba(0, 0, 0, 0.04)',
+                },
+              }}
+              size="large"
+            >
               {mode === 'dark' ? <Brightness7Icon /> : <Brightness4Icon />}
             </IconButton>
           </Tooltip>
 
-          <Tooltip title="Hesap ayarları">
+          <Tooltip title="Account settings">
             <IconButton
               onClick={handleProfileClick}
               size="small"
@@ -126,21 +140,21 @@ export const Navbar: React.FC<NavbarProps> = ({ onThemeToggle }) => {
         >
           <MenuItem onClick={handleClose}>
             <Avatar src={currentUser?.avatarUrl} />
-            {currentUser?.username || 'Kullanıcı'}
+            {currentUser?.username || 'User'}
           </MenuItem>
           <Divider />
           <MenuItem onClick={() => navigate('/settings')}>
             <ListItemIcon>
               <SettingsIcon fontSize="small" />
             </ListItemIcon>
-            Ayarlar
+            Settings
           </MenuItem>
           <Divider />
           <MenuItem onClick={handleLogout}>
             <ListItemIcon>
               <LogoutIcon fontSize="small" />
             </ListItemIcon>
-            Çıkış Yap
+            Logout
           </MenuItem>
         </Menu>
       </Toolbar>
@@ -148,4 +162,4 @@ export const Navbar: React.FC<NavbarProps> = ({ onThemeToggle }) => {
   );
 };
 
-export default Navbar; 
+export default Navbar;

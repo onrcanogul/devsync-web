@@ -30,9 +30,9 @@ function App() {
                 <Layout>
                   <Routes>
                     <Route path="/" element={<DashboardPage />} />
-                    <Route path="/repositories" element={<RepositoriesPage />} />
                     <Route path="/analysis" element={<AnalysisPage />} />
-                    <Route path="/analysis/:repoId" element={<AnalysisDetailPage />} />
+                    <Route path="/analysis/:id" element={<AnalysisDetailPage />} />
+                    <Route path="/repositories" element={<RepositoriesPage />} />
                     <Route path="/settings" element={<SettingsPage />} />
                   </Routes>
                 </Layout>
