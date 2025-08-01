@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { decodeJwt } from '../utils/jwt';
 
-const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:8085';
+const API_URL = process.env.REACT_APP_API_URL;
 const GITHUB_CLIENT_ID = process.env.REACT_APP_GITHUB_CLIENT_ID;
 
 if (!GITHUB_CLIENT_ID) {

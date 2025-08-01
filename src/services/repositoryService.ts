@@ -2,13 +2,13 @@ import axios from 'axios';
 import { GitHubRepository, RepositoryAddResponse, RepositoryFromGraph } from '../types/repository';
 import { authService } from './authService';
 
-const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://localhost:8081';
+const API_BASE_URL = process.env.REACT_APP_API_URL;
 
 export const repositoryService = {
   // Get connected repositories for a user
   async getConnectedRepositories(username: string): Promise<RepositoryFromGraph[]> {
     try {
-      const response = await axios.get<RepositoryFromGraph[]>(`http://localhost:8085/api/context-graph/repo/${username}`);
+      const response = await axios.get<RepositoryFromGraph[]>(`${API_BASE_URL}/api/repository/${username}`);
       return response.data;
     } catch (error) {
       console.error('Error fetching connected repositories:', error);

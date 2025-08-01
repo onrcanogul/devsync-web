@@ -8,7 +8,7 @@ import {
 import { decodeJwt } from '../utils/jwt';
 import axios from 'axios';
 
-const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:8085/api';
+const API_URL = `${process.env.REACT_APP_API_URL}/api`;
 
 export const getPullRequestNodes = async (): Promise<PullRequestNode[]> => {
   const token = localStorage.getItem('auth_token');
@@ -22,7 +22,7 @@ export const getPullRequestNodes = async (): Promise<PullRequestNode[]> => {
   }
 
   try {
-    const response = await axios.get<PullRequestNode[]>(`http://localhost:8085/api/context-graph/user/${decoded.sub}`, {
+    const response = await axios.get<PullRequestNode[]>(`${API_URL}/pull-request/user/${decoded.sub}`, {
       headers: {
         'Authorization': `Bearer ${token}`
       }
@@ -37,21 +37,18 @@ export const getPullRequestNodes = async (): Promise<PullRequestNode[]> => {
 };
 
 export const getAnalyses = async (filters: AnalysisFilters): Promise<PaginatedResponse<AnalysisResult>> => {
-  const response = await fetch(
-    `${API_URL}/analyses?page=${filters.page}&size=${filters.size}${
-      filters.repositoryName ? `&repositoryName=${filters.repositoryName}` : ''
-    }`
+  const response = await axios.get<PaginatedResponse<AnalysisResult>>(
+    `${API_URL}/analyze/${filters.page}/${filters.size}`
   );
-  return response.json();
+  return response.data;
 };
 
 export const getContextGraph = async (repoId: number, branch?: string): Promise<PullRequestNode[]> => {
   const url = branch 
-    ? `${API_URL}/context-graph/${repoId}/${branch}`
-    : `${API_URL}/context-graph/${repoId}`;
-  const response = await fetch(url);
-  const data = await response.json();
-  return Array.isArray(data) ? data : [data];
+    ? `${API_URL}/pull-request/repo/${repoId}/${branch}`
+    : `${API_URL}/pull-request/repo/${repoId}`;
+  const response = await axios.get<PullRequestNode[]>(url);
+  return Array.isArray(response.data) ? response.data : [response.data];
 };
 
 export const getPullRequestNodeById = async (id: number): Promise<PullRequestNode> => {
@@ -61,7 +58,7 @@ export const getPullRequestNodeById = async (id: number): Promise<PullRequestNod
   }
 
   try {
-    const response = await axios.get<PullRequestNode>(`http://localhost:8085/api/context-graph/pull-request/${id}`, {
+    const response = await axios.get<PullRequestNode>(`${API_URL}/pull-request/${id}`, {
       headers: {
         'Authorization': `Bearer ${token}`
       }
@@ -82,7 +79,7 @@ export const getUserPullRequestNodes = async (username: string): Promise<PullReq
   }
 
   try {
-    const response = await axios.get<PullRequestNode[]>(`http://localhost:8085/api/context-graph/user/${username}`, {
+    const response = await axios.get<PullRequestNode[]>(`${API_URL}/pull-request/user/${username}`, {
       headers: {
         'Authorization': `Bearer ${token}`
       }
