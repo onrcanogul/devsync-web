@@ -41,10 +41,10 @@ const LoginPage = () => {
 
           <Box>
             <Typography variant="h5" sx={{ mb: 1, fontWeight: 600 }}>
-              DevSync'e Hoş Geldiniz
+              Welcome to DevSync
             </Typography>
             <Typography variant="body2" color="text.secondary">
-              GitHub hesabınızla giriş yapın ve kod analizine başlayın
+              Sign in with your GitHub account and start code analysis
             </Typography>
           </Box>
 
@@ -61,7 +61,7 @@ const LoginPage = () => {
               },
             }}
           >
-            GitHub ile Giriş Yap
+            Sign in with GitHub
           </Button>
 
           <Box sx={{ width: '100%' }}>
