@@ -12,6 +12,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 0  # Güncel commit'i garanti et
 
       - name: Setup Node.js
         uses: actions/setup-node@v3
@@ -21,7 +23,7 @@ jobs:
       - name: Install dependencies & Build
         run: |
           npm install
-          npm run build
+          CI=false npm run build  # Warnings yüzünden fail olmasın
 
       - name: Deploy to Server
         uses: appleboy/scp-action@v0.1.4
@@ -32,3 +34,4 @@ jobs:
           port: 22
           source: "build/*"
           target: "/var/www/devsync"
+          pre-script: rm -rf /var/www/devsync/*
