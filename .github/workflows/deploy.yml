@@ -29,5 +29,5 @@ jobs:
           host: ${{ secrets.SERVER_IP }}
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.DEPLOY_KEY }}
-          source: "react-app/build/*"
+          source: "build/*"
           target: "/var/www/devsync"
