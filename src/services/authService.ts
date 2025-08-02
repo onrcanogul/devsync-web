@@ -21,17 +21,12 @@ export const authService = {
     const scope = 'read:user user:email repo admin:repo_hook';
     
     const url = `https://github.com/login/oauth/authorize?client_id=${GITHUB_CLIENT_ID}&redirect_uri=${redirectUri}&scope=${scope}`;
-    console.log('GitHub OAuth URL:', url);
     return url;
   },
 
   handleGitHubCallback: async (code: string) => {
     try {
-      console.log('Sending code to backend:', code);
-      console.log('Backend URL:', `${API_URL}/api/auth/github/code`);
-      
       const response = await axios.post(`${API_URL}/api/auth/github/code`, { code });
-      console.log('Backend response:', response.data);
       
       const { token, githubAccessToken } = response.data;
       

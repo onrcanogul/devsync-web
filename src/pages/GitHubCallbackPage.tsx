@@ -18,12 +18,6 @@ const GitHubCallbackPage = () => {
         const error = searchParams.get('error');
         const errorDescription = searchParams.get('error_description');
 
-        console.log('GitHub callback params:', {
-          code,
-          error,
-          errorDescription,
-          fullUrl: window.location.href
-        });
 
         if (error || errorDescription) {
           throw new Error(errorDescription || 'GitHub authorization failed');

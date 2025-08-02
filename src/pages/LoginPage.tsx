@@ -15,9 +15,6 @@ import { githubRepositoryService } from '../services/githubRepositoryService';
 
 const LoginPage = () => {
   const handleGitHubLogin = async () => {
-    var repositories = await githubRepositoryService.getUserRepositories('onrcanogul')
-    console.log(repositories)
-
     window.location.href = authService.getGitHubOAuthURL();
   };
 
