@@ -3,7 +3,6 @@ import {
   AnalysisResult, 
   PaginatedResponse, 
   PullRequestNode,
-  DashboardData
 } from '../types/analysis';
 import { decodeJwt } from '../utils/jwt';
 import axios from 'axios';
