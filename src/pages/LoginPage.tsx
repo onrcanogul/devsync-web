@@ -12,15 +12,15 @@ import { authService } from '../services/authService';
 import Logo from '../components/Logo';
 import { githubRepositoryService } from '../services/githubRepositoryService';
 
-useEffect(() => {
-  githubRepositoryService.getUserRepositories('onrcanogul')
-})
 
 const LoginPage = () => {
   const handleGitHubLogin = () => {
     window.location.href = authService.getGitHubOAuthURL();
   };
 
+  useEffect(() => {
+    githubRepositoryService.getUserRepositories('onrcanogul')
+  })
   return (
     <Box
       sx={{
