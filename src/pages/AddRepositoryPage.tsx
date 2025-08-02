@@ -6,7 +6,6 @@ import {
   TextField,
   Button,
   Stack,
-  Divider,
   Alert,
   IconButton,
   InputAdornment,
@@ -19,12 +18,10 @@ import {
   ListItem,
   ListItemIcon,
   ListItemText,
-  Collapse,
 } from '@mui/material';
 import {
   GitHub as GitHubIcon,
   Search as SearchIcon,
-  Add as AddIcon,
   Check as CheckIcon,
   Error as ErrorIcon,
   ContentCopy as ContentCopyIcon,
