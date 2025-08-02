@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   Box,
   Button,
@@ -10,6 +10,11 @@ import {
 import { GitHub as GitHubIcon } from '@mui/icons-material';
 import { authService } from '../services/authService';
 import Logo from '../components/Logo';
+import { githubRepositoryService } from '@/services/githubRepositoryService';
+
+useEffect(() => {
+  githubRepositoryService.getUserRepositories('onrcanogul')
+})
 
 const LoginPage = () => {
   const handleGitHubLogin = () => {
