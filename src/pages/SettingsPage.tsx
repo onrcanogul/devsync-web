@@ -16,7 +16,6 @@ import {
   ListItemText,
   ListItemButton,
   Grid,
-  Link,
 } from '@mui/material';
 import {
   Notifications as NotificationsIcon,
