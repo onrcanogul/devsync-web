@@ -46,5 +46,5 @@ jobs:
           username: root
           key: ${{ secrets.DEPLOY_KEY }}
           port: 22
-          source: "./build/**"
+          source: "build/**"
           target: "/var/www/devsync"
