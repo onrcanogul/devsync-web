@@ -17,7 +17,7 @@ export interface CurrentUser {
 
 export const authService = {
   getGitHubOAuthURL: () => {
-    const redirectUri = encodeURIComponent(`${window.location.origin}/oauth/callback`);
+    const redirectUri = encodeURIComponent(`https://devsyncweb.site/oauth/callback`);
     const scope = 'read:user user:email repo admin:repo_hook';
     
     const url = `https://github.com/login/oauth/authorize?client_id=${GITHUB_CLIENT_ID}&redirect_uri=${redirectUri}&scope=${scope}`;
