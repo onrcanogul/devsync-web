@@ -14,7 +14,6 @@ export const repositoryService = {
       return [];
     }
   },
-
   async addRepository(repoFullName: string): Promise<RepositoryAddResponse> {
     try {
       await new Promise(resolve => setTimeout(resolve, 1000));
