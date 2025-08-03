@@ -5,7 +5,6 @@ import { authService } from './authService';
 const API_BASE_URL = process.env.REACT_APP_API_URL;
 
 export const repositoryService = {
-  // Get connected repositories for a user
   async getConnectedRepositories(username: string): Promise<RepositoryFromGraph[]> {
     try {
       const response = await axios.get<RepositoryFromGraph[]>(`${API_BASE_URL}/api/repository/${username}`);
@@ -16,13 +15,10 @@ export const repositoryService = {
     }
   },
 
-  // GitHub repository'yi doğrula ve ekle
   async addRepository(repoFullName: string): Promise<RepositoryAddResponse> {
     try {
-      // Simüle edilmiş API çağrısı
       await new Promise(resolve => setTimeout(resolve, 1000));
 
-      // Demo amaçlı sadece facebook/react için başarılı yanıt dön
       if (repoFullName.toLowerCase() === 'facebook/react') {
         const mockResponse: RepositoryAddResponse = {
           success: true,
