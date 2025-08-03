@@ -157,7 +157,6 @@ const AnalysisPage = () => {
               {/* Commit Icon */}
               <CommitIcon sx={{ color: 'text.secondary', fontSize: 20 }} />
 
-              {/* Main Content */}
               <Box sx={{ flex: 1 }}>
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 0.5 }}>
                   <Typography variant="body1" sx={{ fontWeight: 500 }}>
