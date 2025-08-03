@@ -46,6 +46,7 @@ const AnalysisPage = () => {
           setError('No pull request nodes found');
           return;
         }
+        console.log(nodes);
         setPullRequestNodes(nodes);
       } catch (error) {
         console.error('Error fetching pull request nodes:', error);
