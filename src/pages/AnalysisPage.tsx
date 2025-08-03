@@ -154,7 +154,6 @@ const AnalysisPage = () => {
             onClick={() => navigate(`/analysis/${node.id}`)}
           >
             <Box sx={{ display: 'flex', alignItems: 'center', width: '100%', gap: 2 }}>
-              {/* Commit Icon */}
               <CommitIcon sx={{ color: 'text.secondary', fontSize: 20 }} />
 
               <Box sx={{ flex: 1 }}>
