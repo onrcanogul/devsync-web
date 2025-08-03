@@ -167,7 +167,6 @@ const AnalysisDetailPage = () => {
         </Paper>
       </Box>
 
-      {/* Analysis Comments */}
       {node.analysis && (
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
           <Paper
