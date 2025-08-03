@@ -170,7 +170,6 @@ const AnalysisDetailPage = () => {
       {/* Analysis Comments */}
       {node.analysis && (
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
-          {/* Technical Analysis */}
           <Paper
             elevation={0}
             sx={{
