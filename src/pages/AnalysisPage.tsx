@@ -58,7 +58,6 @@ const AnalysisPage = () => {
     fetchPullRequestNodes();
   }, []);
 
-  // Calculate pagination
   const totalPages = Math.ceil(pullRequestNodes.length / ITEMS_PER_PAGE);
   const validPage = Math.min(Math.max(1, currentPage), totalPages || 1);
   const paginatedNodes = pullRequestNodes.slice(
