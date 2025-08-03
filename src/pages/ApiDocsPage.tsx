@@ -4,7 +4,6 @@ import {
   Paper,
   Typography,
   Stack,
-  Divider,
   Alert,
   Link,
   List,
@@ -171,7 +170,6 @@ const ApiDocsPage = () => {
           <Typography variant="h6" sx={{ mb: 3, fontWeight: 600 }}>
             Başlarken
           </Typography>
-
           <Stack spacing={2}>
             <Typography>
               1. Ayarlar sayfasından yeni bir API anahtarı oluşturun
