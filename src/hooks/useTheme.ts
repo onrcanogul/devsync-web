@@ -96,7 +96,6 @@ export const useTheme = () => {
   };
 
   useEffect(() => {
-    // Tema değiştiğinde body arka plan rengini güncelle
     document.body.style.backgroundColor = theme.palette.background.default;
   }, [theme]);
 
