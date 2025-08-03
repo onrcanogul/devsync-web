@@ -15,7 +15,6 @@ import {
 } from '@mui/material';
 import {
   GitHub as GitHubIcon,
-  Circle as CircleIcon,
   CheckCircle as CheckCircleIcon,
   Warning as WarningIcon,
   Error as ErrorIcon,
