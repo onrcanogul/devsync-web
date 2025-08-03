@@ -23,14 +23,11 @@ import {
 import {
     Star as StarIcon,
     AccountTree as ForkIcon,
-    Code as CodeIcon,
     Circle as CircleIcon,
     GitHub as GitHubIcon,
-    History as HistoryIcon,
     Lock as LockIcon,
     Public as PublicIcon,
     Link as LinkIcon,
-    LinkOff as LinkOffIcon
 } from '@mui/icons-material';
 import { RepositoryFromApi } from '../types/repositoryFromApi';
 import { githubRepositoryService } from '../services/githubRepositoryService';
