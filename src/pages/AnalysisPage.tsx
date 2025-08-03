@@ -173,7 +173,6 @@ const AnalysisPage = () => {
                 </Box>
                 
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                  {/* Repository Name */}
                   <Typography variant="caption" color="text.secondary">
                     {node.repository?.name}
                   </Typography>
