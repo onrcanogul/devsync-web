@@ -54,7 +54,6 @@ const languageColors: { [key: string]: string } = {
     Shell: '#89E051'
 };
 
-// Custom styled tooltip
 const CustomTooltip = styled(({ className, ...props }: TooltipProps) => (
     <Tooltip {...props} classes={{ popper: className }} />
 ))(({ theme }: { theme: Theme }) => ({
