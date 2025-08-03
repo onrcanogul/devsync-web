@@ -99,7 +99,6 @@ const CommitDetailModal: React.FC<CommitDetailModalProps> = ({ open, onClose, co
 
   const { bg, color } = getTypeColor();
 
-  // Repository bilgilerini güvenli bir şekilde al
   const commitUrl = commit.repository?.htmlUrl 
     ? `${commit.repository.htmlUrl}/commit/${commit.hash}`
     : undefined;
