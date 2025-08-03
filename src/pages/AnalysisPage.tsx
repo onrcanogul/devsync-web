@@ -46,8 +46,15 @@ const AnalysisPage = () => {
           setError('No pull request nodes found');
           return;
         }
-        console.log(nodes);
-        setPullRequestNodes(nodes);
+        
+        // analyzedDate'e göre sırala (en son analiz edilen en üstte)
+        const sortedNodes = nodes.sort((a, b) => {
+          const dateA = new Date(a.analyzedDate).getTime();
+          const dateB = new Date(b.analyzedDate).getTime();
+          return dateB - dateA;
+        });
+        
+        setPullRequestNodes(sortedNodes);
       } catch (error) {
         console.error('Error fetching pull request nodes:', error);
         setError('Failed to fetch pull request nodes');
@@ -200,6 +207,11 @@ const AnalysisPage = () => {
                       • {node.headCommitSha.substring(0, 7)}
                     </Typography>
                   </Tooltip>
+
+                  {/* Analysis Date */}
+                  <Typography variant="caption" color="text.secondary">
+                    • analyzed {formatDate(node.analyzedDate.toString())}
+                  </Typography>
                 </Box>
               </Box>
 

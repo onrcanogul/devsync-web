@@ -91,6 +91,7 @@ export interface PullRequestNode {
   createdBy: UserNode;
   solves: IssueNode[];
   repository: RepositoryNode;
+  analyzedDate: Date;
 }
 
 export interface DashboardStats {
