@@ -12,7 +12,6 @@ const GitHubCallbackPage = () => {
   useEffect(() => {
     const handleCallback = async () => {
       try {
-        // URL'den code parametresini al
         const searchParams = new URLSearchParams(location.search);
         const code = searchParams.get('code');
         const error = searchParams.get('error');
