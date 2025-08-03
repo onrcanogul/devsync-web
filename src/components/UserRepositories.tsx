@@ -33,7 +33,6 @@ import {
     LinkOff as LinkOffIcon
 } from '@mui/icons-material';
 import { RepositoryFromApi } from '../types/repositoryFromApi';
-import { RepositoryFromGraph } from '../types/repository';
 import { githubRepositoryService } from '../services/githubRepositoryService';
 import { repositoryService } from '../services/repositoryService';
 
