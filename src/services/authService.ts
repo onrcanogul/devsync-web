@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { decodeJwt } from '../utils/jwt';
+import apiClient from './apiClient';
 
-const API_URL = process.env.REACT_APP_API_URL;
 const GITHUB_CLIENT_ID = process.env.REACT_APP_GITHUB_CLIENT_ID;
 
 if (!GITHUB_CLIENT_ID) {
@@ -26,7 +26,7 @@ export const authService = {
 
   handleGitHubCallback: async (code: string) => {
     try {
-      const response = await axios.post(`${API_URL}/api/auth/github/code`, { code });
+      const response = await apiClient.post('/auth/github/code', { code });
       
       const { token, githubAccessToken } = response.data;
       
@@ -34,32 +34,16 @@ export const authService = {
       localStorage.setItem('auth_token', token);
       localStorage.setItem('github_access_token', githubAccessToken);
       
-      // Axios için default header'ı ayarla
-      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-      
       return token;
     } catch (error) {
-      if (axios.isAxiosError(error)) {
-        console.error('GitHub login error details:', {
-          message: error.message,
-          response: error.response?.data,
-          status: error.response?.status,
-          headers: error.response?.headers
-        });
-      } else {
-        console.error('GitHub login error:', error);
-      }
+      console.error('GitHub login error:', error);
       throw error;
     }
   },
 
   isAuthenticated: () => {
     const token = localStorage.getItem('auth_token');
-    if (token) {
-      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-      return true;
-    }
-    return false;
+    return !!token;
   },
 
   getToken: () => {
@@ -88,6 +72,5 @@ export const authService = {
   logout: () => {
     localStorage.removeItem('auth_token');
     localStorage.removeItem('github_access_token');
-    delete axios.defaults.headers.common['Authorization'];
   },
 }; 
