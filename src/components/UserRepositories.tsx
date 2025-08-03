@@ -112,7 +112,6 @@ export const UserRepositories: React.FC<UserRepositoriesProps> = ({
             const [owner, repoName] = repo.full_name.split('/');
             await repositoryService.addWebhook(owner, repoName);
             
-            // Update the repository's webhook status locally
             setRepositories(prevRepos => 
                 prevRepos.map(r => 
                     r.id === repo.id ? { ...r, hasTargetWebhook: true } : r
