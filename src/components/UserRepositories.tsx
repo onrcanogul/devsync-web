@@ -94,8 +94,12 @@ export const UserRepositories: React.FC<UserRepositoriesProps> = ({
                 setError(null);
                 const reposData = await githubRepositoryService.getUserRepositories(username);
                 setRepositories(reposData);
-            } catch (err) {
-                setError('Error loading repositories.');
+            } catch (err: any) {
+                if (err.message === 'Session expired. Please login again.') {
+                    setError('Your session has expired. Redirecting to login page...');
+                } else {
+                    setError('Error loading repositories. Please try again later.');
+                }
                 console.error('Error fetching data:', err);
             } finally {
                 setLoading(false);
