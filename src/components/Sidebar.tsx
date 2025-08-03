@@ -17,7 +17,6 @@ import {
   Analytics as AnalyticsIcon,
   GitHub as GitHubIcon,
   Settings as SettingsIcon,
-  Add as AddIcon,
 } from '@mui/icons-material';
 import { useNavigate, useLocation } from 'react-router-dom';
 import Logo from './Logo';
