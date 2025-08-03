@@ -12,7 +12,6 @@ import {
   Pagination,
   CircularProgress,
   Alert,
-  Avatar,
 } from '@mui/material';
 import {
   GitHub as GitHubIcon,
