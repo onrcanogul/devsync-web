@@ -8,6 +8,14 @@ interface JwtPayload {
   iat: number;
 }
 
+export const isTokenExpired = (token: string): boolean => {
+  const decoded = decodeJwt(token);
+  if (!decoded) return true;
+  
+  const currentTime = Math.floor(Date.now() / 1000); // Unix timestamp (seconds)
+  return decoded.exp <= currentTime;
+};
+
 export const decodeJwt = (token: string): JwtPayload | null => {
   try {
     const base64Url = token.split('.')[1];
