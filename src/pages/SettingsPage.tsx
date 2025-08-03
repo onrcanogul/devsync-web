@@ -312,7 +312,6 @@ const SettingsPage = () => {
               </Box>
             </Paper>
 
-            {/* Slack */}
             <Paper
               variant="outlined"
               sx={{ p: 3, borderRadius: 2 }}
