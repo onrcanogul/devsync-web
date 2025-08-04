@@ -30,8 +30,8 @@ export const CommitAnalysisList: React.FC<CommitAnalysisListProps> = ({ commits 
   const theme = useTheme();
   const [expanded, setExpanded] = useState<string | false>(false);
 
-  const handleChange = (panel: string) => (event: React.SyntheticEvent, isExpanded: boolean) => {
-    setExpanded(isExpanded ? panel : false);
+  const handleAccordionChange = (commitHash: string) => (_: React.SyntheticEvent, isExpanded: boolean) => {
+    setExpanded(isExpanded ? commitHash : false);
   };
 
   const getRiskColor = (riskScore: number) => {
@@ -70,7 +70,7 @@ export const CommitAnalysisList: React.FC<CommitAnalysisListProps> = ({ commits 
         <Accordion
           key={commit.hash}
           expanded={expanded === commit.hash}
-          onChange={handleChange(commit.hash)}
+          onChange={handleAccordionChange(commit.hash)}
           disableGutters
           elevation={0}
           sx={{
