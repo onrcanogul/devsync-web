@@ -12,7 +12,7 @@ export const isTokenExpired = (token: string): boolean => {
   const decoded = decodeJwt(token);
   if (!decoded) return true;
   
-  const currentTime = Math.floor(Date.now() / 1000); // Unix timestamp (seconds)
+  const currentTime = Math.floor(Date.now() / 1000);
   return decoded.exp <= currentTime;
 };
 
@@ -29,7 +29,7 @@ export const decodeJwt = (token: string): JwtPayload | null => {
 
     return JSON.parse(jsonPayload);
   } catch (error) {
-    console.error('Error decoding JWT:', error);
+    
     return null;
   }
 }; 

@@ -33,7 +33,6 @@ const AnalysisPage = () => {
   const [error, setError] = useState<string | null>(null);
   const [pullRequestNodes, setPullRequestNodes] = useState<PullRequestNode[]>([]);
 
-  // Get current page from URL or default to 1
   const currentPage = parseInt(new URLSearchParams(location.search).get('page') || '1', 10);
 
   useEffect(() => {
@@ -47,7 +46,6 @@ const AnalysisPage = () => {
           return;
         }
         
-        // analyzedDate'e göre sırala (en son analiz edilen en üstte)
         const sortedNodes = nodes.sort((a, b) => {
           const dateA = new Date(a.analyzedDate).getTime();
           const dateB = new Date(b.analyzedDate).getTime();
@@ -56,7 +54,7 @@ const AnalysisPage = () => {
         
         setPullRequestNodes(sortedNodes);
       } catch (error) {
-        console.error('Error fetching pull request nodes:', error);
+        
         setError('Failed to fetch pull request nodes');
       } finally {
         setLoading(false);
@@ -183,19 +181,16 @@ const AnalysisPage = () => {
                     {node.repository?.name}
                   </Typography>
 
-                  {/* Branch */}
                   <Typography variant="caption" color="text.secondary">
                     • {node.branch}
                   </Typography>
 
-                  {/* Author */}
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
                     <Typography variant="caption" color="text.secondary">
                       • by {node.pusher}
                     </Typography>
                   </Box>
 
-                  {/* Commit Hash */}
                   <Tooltip title="Commit Hash">
                     <Typography 
                       variant="caption" 
@@ -208,14 +203,12 @@ const AnalysisPage = () => {
                     </Typography>
                   </Tooltip>
 
-                  {/* Analysis Date */}
                   <Typography variant="caption" color="text.secondary">
                     • analyzed {formatDate(node.analyzedDate.toString())}
                   </Typography>
                 </Box>
               </Box>
 
-              {/* GitHub Link */}
               {node.repository?.htmlUrl && (
                 <Tooltip title="View on GitHub">
                   <IconButton

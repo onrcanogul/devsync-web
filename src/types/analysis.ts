@@ -24,7 +24,6 @@ export interface AnalysisFilters {
   size: number;
 }
 
-// Eski tipler (geriye dönük uyumluluk için)
 export type CommitAnalysis = CommitAnalysisNode;
 export type Commit = CommitNode;
 export type Repository = RepositoryNode;

@@ -50,7 +50,7 @@ const RepositoriesPage = () => {
 
   return (
     <Box>
-      {/* Header */}
+      
       <Paper 
         elevation={0}
         sx={{ 
@@ -74,7 +74,7 @@ const RepositoriesPage = () => {
         </Stack>
       </Paper>
 
-      {/* Filters */}
+      
       <Paper
         elevation={0}
         sx={{
@@ -146,7 +146,7 @@ const RepositoriesPage = () => {
         </Box>
       </Paper>
 
-      {/* User Info */}
+      
       <Paper
         elevation={0}
         sx={{
@@ -170,7 +170,7 @@ const RepositoriesPage = () => {
         </Typography>
       </Paper>
 
-      {/* Repositories List */}
+      
       <Paper
         elevation={0}
         sx={{

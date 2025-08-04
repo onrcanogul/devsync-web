@@ -34,7 +34,7 @@ export const authService = {
       
       return token;
     } catch (error) {
-      console.error('GitHub login error:', error);
+      
       throw error;
     }
   },

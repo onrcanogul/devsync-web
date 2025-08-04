@@ -17,7 +17,7 @@ export const githubRepositoryService = {
                 throw new Error('Session expired. Please login again.');
             }
             
-            console.error('Error fetching user repositories:', error);
+            
             throw error;
         }
     }

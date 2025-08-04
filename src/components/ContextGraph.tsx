@@ -20,7 +20,7 @@ export const ContextGraph: React.FC<ContextGraphProps> = ({ repoId, branch }) =>
         setNodes(data);
       } catch (err) {
         setError('Failed to fetch context graph data');
-        console.error(err);
+        
       } finally {
         setLoading(false);
       }

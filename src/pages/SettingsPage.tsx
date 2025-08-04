@@ -48,7 +48,7 @@ const SettingsPage = () => {
   const [showApiKey, setShowApiKey] = useState<string | null>(null);
   const [copied, setCopied] = useState<string | null>(null);
 
-  // Mock data
+  
   const settings: UserSettings = {
     notifications: {
       pullRequests: true,
@@ -249,7 +249,7 @@ const SettingsPage = () => {
       case 'integrations':
         return (
           <Stack spacing={4}>
-            {/* GitHub */}
+            
             <Paper
               variant="outlined"
               sx={{ p: 3, borderRadius: 2 }}
@@ -283,7 +283,7 @@ const SettingsPage = () => {
               )}
             </Paper>
 
-            {/* Jira */}
+            
             <Paper
               variant="outlined"
               sx={{ p: 3, borderRadius: 2 }}

@@ -13,13 +13,11 @@ const handleTokenExpiration = () => {
   window.location.href = '/login';
 };
 
-// Request interceptor to add auth token to all requests and check expiration
 apiClient.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('auth_token');
     
     if (token) {
-      // Token varsa expire olup olmadığını kontrol et
       if (isTokenExpired(token)) {
         handleTokenExpiration();
         return Promise.reject(new Error('Token expired'));
@@ -35,11 +33,9 @@ apiClient.interceptors.request.use(
   }
 );
 
-// Response interceptor to handle common errors
 apiClient.interceptors.response.use(
   (response) => response,
   (error) => {
-    // 401 Unauthorized hatası gelirse
     if (error.response?.status === 401) {
       handleTokenExpiration();
     }

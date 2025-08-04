@@ -44,7 +44,7 @@ const AnalysisDetailPage = () => {
         const data = await getPullRequestNodeById(parseInt(id));
         setNode(data);
       } catch (error) {
-        console.error('Error fetching analysis:', error);
+        
         setError('Failed to fetch analysis details');
       } finally {
         setLoading(false);
@@ -90,7 +90,7 @@ const AnalysisDetailPage = () => {
 
   return (
     <Box>
-      {/* Header */}
+      
       <Box sx={{ mb: 4 }}>
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
           <IconButton onClick={() => navigate('/analysis')}>
@@ -122,7 +122,7 @@ const AnalysisDetailPage = () => {
           </Tooltip>
         </Box>
 
-        {/* Commit Info */}
+        
         <Paper
           elevation={0}
           sx={{
@@ -195,7 +195,7 @@ const AnalysisDetailPage = () => {
             </Typography>
           </Paper>
 
-          {/* Functional Analysis */}
+          
           <Paper
             elevation={0}
             sx={{
@@ -222,7 +222,7 @@ const AnalysisDetailPage = () => {
             </Typography>
           </Paper>
 
-          {/* Architectural Analysis */}
+          
           <Paper
             elevation={0}
             sx={{

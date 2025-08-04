@@ -100,7 +100,7 @@ export const UserRepositories: React.FC<UserRepositoriesProps> = ({
                 } else {
                     setError('Error loading repositories. Please try again later.');
                 }
-                console.error('Error fetching data:', err);
+                
             } finally {
                 setLoading(false);
             }
@@ -133,7 +133,7 @@ export const UserRepositories: React.FC<UserRepositoriesProps> = ({
                 message: 'Error connecting repository to DevSync',
                 severity: 'error'
             });
-            console.error('Error connecting repository:', error);
+            
         }
     };
 
@@ -158,7 +158,6 @@ export const UserRepositories: React.FC<UserRepositoriesProps> = ({
     const filteredAndSortedRepositories = useMemo(() => {
         let result = [...repositories];
 
-        // Search filtering
         if (searchQuery) {
             const query = searchQuery.toLowerCase();
             result = result.filter(repo => 
@@ -168,7 +167,6 @@ export const UserRepositories: React.FC<UserRepositoriesProps> = ({
             );
         }
 
-        // Sorting
         result.sort((a, b) => {
             switch (sortBy) {
                 case 'updated':

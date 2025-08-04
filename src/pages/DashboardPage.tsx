@@ -52,7 +52,7 @@ const DashboardPage = () => {
         const nodes = await getUserPullRequestNodes(currentUser.username);
         setPullRequestNodes(nodes);
       } catch (error) {
-        console.error('Error fetching dashboard data:', error);
+        
         setError('Failed to fetch dashboard data');
       } finally {
         setLoading(false);
@@ -63,9 +63,9 @@ const DashboardPage = () => {
   }, []);
 
   const getRiskColor = (riskScore: number) => {
-    if (riskScore <= 30) return '#10B981'; // success
-    if (riskScore <= 70) return '#F59E0B'; // warning
-    return '#EF4444'; // error
+    if (riskScore <= 30) return '#10B981';
+if (riskScore <= 70) return '#F59E0B';
+return '#EF4444';
   };
 
   const getRiskIcon = (riskScore: number) => {
@@ -123,7 +123,7 @@ const DashboardPage = () => {
         />
       </Box>
 
-      {/* Main Stats */}
+      
       <Grid container spacing={3} sx={{ mb: 4 }}>
         <Grid item xs={12} md={3}>
           <Paper
@@ -158,7 +158,7 @@ const DashboardPage = () => {
           </Paper>
         </Grid>
 
-        {/* Risk Distribution */}
+        
         <Grid item xs={12} md={9}>
           <Paper
             elevation={0}
@@ -220,9 +220,9 @@ const DashboardPage = () => {
         </Grid>
       </Grid>
 
-      {/* Repository Stats and Recent PRs */}
+      
       <Grid container spacing={3}>
-        {/* Repository Stats */}
+        
         <Grid item xs={12} md={4}>
           <Paper
             elevation={0}
@@ -256,7 +256,7 @@ const DashboardPage = () => {
           </Paper>
         </Grid>
 
-        {/* Recent Pull Requests */}
+        
         <Grid item xs={12} md={8}>
           <Paper
             elevation={0}

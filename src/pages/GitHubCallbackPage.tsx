@@ -30,7 +30,7 @@ const GitHubCallbackPage = () => {
         
         navigate('/', { replace: true });
       } catch (err) {
-        console.error('GitHub callback error:', err);
+        
         if (axios.isAxiosError(err)) {
           setError(`GitHub ile giriş yapılırken bir hata oluştu: ${err.response?.data?.message || err.message}`);
         } else if (err instanceof Error) {

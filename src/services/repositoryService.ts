@@ -10,7 +10,7 @@ export const repositoryService = {
       const response = await axios.get<RepositoryFromGraph[]>(`${API_BASE_URL}/api/repository/${username}`);
       return response.data;
     } catch (error) {
-      console.error('Error fetching connected repositories:', error);
+      
       return [];
     }
   },
@@ -55,7 +55,6 @@ export const repositoryService = {
     }
   },
 
-  // GitHub repository bilgilerini getir
   async getRepositoryDetails(owner: string, repo: string): Promise<GitHubRepository> {
     try {
       const response = await axios.get(`https://api.github.com/repos/${owner}/${repo}`);
@@ -65,7 +64,6 @@ export const repositoryService = {
     }
   },
 
-  // Repository'ye webhook ekle
   async addWebhook(owner: string, repo: string): Promise<void> {
     try {
       const githubAccessToken = authService.getToken();
