@@ -13,6 +13,7 @@ import {
   Divider,
   Chip,
 } from '@mui/material';
+import { CommitAnalysisList } from '../components/CommitAnalysisList';
 import {
   ArrowBack as ArrowBackIcon,
   GitHub as GitHubIcon,
@@ -167,89 +168,93 @@ const AnalysisDetailPage = () => {
         </Paper>
       </Box>
 
-      {node.analysis && (
-        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
-          <Paper
-            elevation={0}
-            sx={{
-              p: 3,
-              border: `1px solid ${theme.palette.divider}`,
-              borderRadius: 2,
-            }}
-          >
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
-              <Box
-                sx={{
-                  p: 1,
-                  borderRadius: 1,
-                  bgcolor: alpha(theme.palette.primary.main, 0.1),
-                  color: theme.palette.primary.main,
-                }}
-              >
-                <CodeIcon />
+      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+        {node.analysis && (
+          <>
+            <Paper
+              elevation={0}
+              sx={{
+                p: 3,
+                border: `1px solid ${theme.palette.divider}`,
+                borderRadius: 2,
+              }}
+            >
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
+                <Box
+                  sx={{
+                    p: 1,
+                    borderRadius: 1,
+                    bgcolor: alpha(theme.palette.primary.main, 0.1),
+                    color: theme.palette.primary.main,
+                  }}
+                >
+                  <CodeIcon />
+                </Box>
+                <Typography variant="h6">Technical Analysis</Typography>
               </Box>
-              <Typography variant="h6">Technical Analysis</Typography>
-            </Box>
-            <Typography variant="body1" color="text.secondary" sx={{ whiteSpace: 'pre-wrap' }}>
-              {node.analysis.technicalComment}
-            </Typography>
-          </Paper>
+              <Typography variant="body1" color="text.secondary" sx={{ whiteSpace: 'pre-wrap' }}>
+                {node.analysis.technicalComment}
+              </Typography>
+            </Paper>
 
-          
-          <Paper
-            elevation={0}
-            sx={{
-              p: 3,
-              border: `1px solid ${theme.palette.divider}`,
-              borderRadius: 2,
-            }}
-          >
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
-              <Box
-                sx={{
-                  p: 1,
-                  borderRadius: 1,
-                  bgcolor: alpha(theme.palette.secondary.main, 0.1),
-                  color: theme.palette.secondary.main,
-                }}
-              >
-                <FunctionsIcon />
+            <Paper
+              elevation={0}
+              sx={{
+                p: 3,
+                border: `1px solid ${theme.palette.divider}`,
+                borderRadius: 2,
+              }}
+            >
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
+                <Box
+                  sx={{
+                    p: 1,
+                    borderRadius: 1,
+                    bgcolor: alpha(theme.palette.secondary.main, 0.1),
+                    color: theme.palette.secondary.main,
+                  }}
+                >
+                  <FunctionsIcon />
+                </Box>
+                <Typography variant="h6">Functional Analysis</Typography>
               </Box>
-              <Typography variant="h6">Functional Analysis</Typography>
-            </Box>
-            <Typography variant="body1" color="text.secondary" sx={{ whiteSpace: 'pre-wrap' }}>
-              {node.analysis.functionalComment}
-            </Typography>
-          </Paper>
+              <Typography variant="body1" color="text.secondary" sx={{ whiteSpace: 'pre-wrap' }}>
+                {node.analysis.functionalComment}
+              </Typography>
+            </Paper>
 
-          
-          <Paper
-            elevation={0}
-            sx={{
-              p: 3,
-              border: `1px solid ${theme.palette.divider}`,
-              borderRadius: 2,
-            }}
-          >
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
-              <Box
-                sx={{
-                  p: 1,
-                  borderRadius: 1,
-                  bgcolor: alpha(theme.palette.info.main, 0.1),
-                  color: theme.palette.info.main,
-                }}
-              >
-                <ArchitectureIcon />
+            <Paper
+              elevation={0}
+              sx={{
+                p: 3,
+                border: `1px solid ${theme.palette.divider}`,
+                borderRadius: 2,
+              }}
+            >
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
+                <Box
+                  sx={{
+                    p: 1,
+                    borderRadius: 1,
+                    bgcolor: alpha(theme.palette.info.main, 0.1),
+                    color: theme.palette.info.main,
+                  }}
+                >
+                  <ArchitectureIcon />
+                </Box>
+                <Typography variant="h6">Architectural Analysis</Typography>
               </Box>
-              <Typography variant="h6">Architectural Analysis</Typography>
-            </Box>
-            <Typography variant="body1" color="text.secondary" sx={{ whiteSpace: 'pre-wrap' }}>
-              {node.analysis.architecturalComment}
-            </Typography>
-          </Paper>
-        </Box>
-      )}
+              <Typography variant="body1" color="text.secondary" sx={{ whiteSpace: 'pre-wrap' }}>
+                {node.analysis.architecturalComment}
+              </Typography>
+            </Paper>
+          </>
+        )}
+
+        {node.commits && node.commits.length > 0 && (
+          <CommitAnalysisList commits={node.commits} />
+        )}
+      </Box>
     </Box>
   );
 };
