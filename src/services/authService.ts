@@ -1,4 +1,3 @@
-import axios from 'axios';
 import { decodeJwt } from '../utils/jwt';
 import apiClient from './apiClient';
 
