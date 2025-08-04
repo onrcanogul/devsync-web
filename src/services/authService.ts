@@ -29,7 +29,6 @@ export const authService = {
       
       const { token, githubAccessToken } = response.data;
       
-      // Token'ları localStorage'a kaydet
       localStorage.setItem('auth_token', token);
       localStorage.setItem('github_access_token', githubAccessToken);
       
