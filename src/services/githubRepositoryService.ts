@@ -13,6 +13,13 @@ export const githubRepositoryService = {
             const response = await apiClient.get<RepositoryFromApi[]>(`/git/${username}`);
             return response.data;
         } catch (error: any) {
+            if (error.response?.status === 403) {
+                authService.logout(); 
+                window.location.href = '/login';
+                throw new Error('Session expired. Please login again.');
+            }
+            
+            console.error('Error fetching user repositories:', error);
             throw error;
         }
     }
