@@ -23,7 +23,6 @@ const menuItems = [
 
 const SettingsPage = () => {
   const [activeSection, setActiveSection] = useState('notifications');
-  const [copied, setCopied] = useState<string | null>(null);
 
   const renderContent = () => {
     return (
