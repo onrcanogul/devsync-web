@@ -27,12 +27,6 @@ const SettingsPage = () => {
   const [activeSection, setActiveSection] = useState('notifications');
   const [copied, setCopied] = useState<string | null>(null);
 
-  const handleCopy = (text: string, id: string) => {
-    navigator.clipboard.writeText(text);
-    setCopied(id);
-    setTimeout(() => setCopied(null), 2000);
-  };
-
   const renderContent = () => {
     return (
       <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%', minHeight: 300 }}>
