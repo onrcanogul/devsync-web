@@ -27,56 +27,6 @@ const SettingsPage = () => {
   const [activeSection, setActiveSection] = useState('notifications');
   const [copied, setCopied] = useState<string | null>(null);
 
-  const settings: UserSettings = {
-    notifications: {
-      pullRequests: true,
-      mentions: true,
-      issues: false,
-      security: true,
-    },
-    theme: {
-      mode: 'dark',
-      accentColor: '#6366F1',
-    },
-    email: {
-      daily: true,
-      weekly: false,
-      mentions: true,
-    },
-    integrations: {
-      github: {
-        connected: true,
-        username: 'devuser',
-        repositories: 25,
-        lastSync: new Date().toISOString(),
-      },
-      jira: {
-        connected: false,
-      },
-      slack: {
-        connected: true,
-        workspace: 'DevSync Team',
-        channels: 3,
-      },
-    },
-    apiKeys: [
-      {
-        id: '1',
-        name: 'Development',
-        created: '2024-01-01T00:00:00Z',
-        lastUsed: '2024-03-10T00:00:00Z',
-        scopes: ['read', 'write'],
-      },
-      {
-        id: '2',
-        name: 'Production',
-        created: '2024-02-01T00:00:00Z',
-        lastUsed: '2024-03-09T00:00:00Z',
-        scopes: ['read', 'write', 'admin'],
-      },
-    ],
-  };
-
   const handleCopy = (text: string, id: string) => {
     navigator.clipboard.writeText(text);
     setCopied(id);
