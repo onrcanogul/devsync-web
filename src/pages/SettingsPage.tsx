@@ -24,7 +24,6 @@ const menuItems = [
 ];
 
 const SettingsPage = () => {
-  const { mode, toggleTheme } = useTheme();
   const [activeSection, setActiveSection] = useState('notifications');
   const [copied, setCopied] = useState<string | null>(null);
 
