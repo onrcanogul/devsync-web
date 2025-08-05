@@ -43,12 +43,11 @@ const menuItems = [
 ];
 
 const SettingsPage = () => {
-  const { mode, accentColor, toggleTheme, changeAccentColor } = useTheme();
+  const { mode, toggleTheme } = useTheme();
   const [activeSection, setActiveSection] = useState('notifications');
   const [showApiKey, setShowApiKey] = useState<string | null>(null);
   const [copied, setCopied] = useState<string | null>(null);
 
-  
   const settings: UserSettings = {
     notifications: {
       pullRequests: true,
@@ -137,7 +136,7 @@ const SettingsPage = () => {
           <Stack spacing={4}>
             <Box>
               <Typography variant="subtitle2" gutterBottom>
-                Tema
+                Theme
               </Typography>
               <Stack direction="row" spacing={2}>
                 <Button
@@ -155,54 +154,6 @@ const SettingsPage = () => {
                   Dark
                 </Button>
               </Stack>
-            </Box>
-
-            <Box>
-              <Typography variant="subtitle2" gutterBottom>
-                Accent Color
-              </Typography>
-              <Stack direction="row" spacing={2}>
-                {[
-                  { color: '#6366F1', name: 'Purple' },
-                  { color: '#10B981', name: 'Green' },
-                  { color: '#F59E0B', name: 'Orange' },
-                  { color: '#EF4444', name: 'Red' },
-                ].map((item) => (
-                  <Box
-                    key={item.color}
-                    onClick={() => changeAccentColor(item.color as any)}
-                    sx={{
-                      width: 48,
-                      height: 48,
-                      borderRadius: 2,
-                      bgcolor: item.color,
-                      cursor: 'pointer',
-                      border: accentColor === item.color ? '3px solid white' : 'none',
-                      boxShadow: accentColor === item.color ? '0 0 0 2px ' + item.color : 'none',
-                      transition: 'all 0.2s',
-                      '&:hover': {
-                        transform: 'scale(1.1)',
-                      },
-                      position: 'relative',
-                      '&::after': accentColor === item.color ? {
-                        content: '""',
-                        position: 'absolute',
-                        top: '50%',
-                        left: '50%',
-                        transform: 'translate(-50%, -50%)',
-                        width: '20px',
-                        height: '20px',
-                        borderRadius: '50%',
-                        backgroundColor: 'white',
-                        opacity: 0.3,
-                      } : {},
-                    }}
-                  />
-                ))}
-              </Stack>
-              <Typography variant="caption" color="text.secondary" sx={{ mt: 1, display: 'block' }}>
-                This color will be used in buttons, selected items, and highlighted elements
-              </Typography>
             </Box>
 
             <Box>
@@ -305,4 +256,4 @@ const SettingsPage = () => {
   );
 };
 
-export default SettingsPage; 
+export default SettingsPage;

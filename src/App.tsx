@@ -1,9 +1,8 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import Layout from './components/Layout';
-import { ProtectedRoute } from './components/ProtectedRoute';
 import AnalysisPage from './pages/AnalysisPage';
 import AnalysisDetailPage from './pages/AnalysisDetailPage';
 import LoginPage from './pages/LoginPage';
@@ -12,9 +11,10 @@ import SettingsPage from './pages/SettingsPage';
 import GitHubCallbackPage from './pages/GitHubCallbackPage';
 import RepositoriesPage from './pages/RepositoriesPage';
 import { useTheme } from './hooks/useTheme';
+import { ProtectedRoute } from './components/ProtectedRoute';
 
 function App() {
-  const { theme } = useTheme();
+  const { theme, toggleTheme } = useTheme();
 
   return (
     <ThemeProvider theme={theme}>
@@ -27,16 +27,16 @@ function App() {
             path="/*"
             element={
               <ProtectedRoute>
-                <Layout>
-                  <Routes>
-                    <Route path="/" element={<DashboardPage />} />
-                    <Route path="/analysis" element={<AnalysisPage />} />
-                    <Route path="/analysis/:id" element={<AnalysisDetailPage />} />
-                    <Route path="/repositories" element={<RepositoriesPage />} />
-                    <Route path="/settings" element={<SettingsPage />} />
-                  </Routes>
-                </Layout>
-              </ProtectedRoute>
+              <Layout onThemeToggle={toggleTheme}>
+                <Routes>
+                  <Route path="/" element={<DashboardPage />} />
+                  <Route path="/analysis" element={<AnalysisPage />} />
+                  <Route path="/analysis/:id" element={<AnalysisDetailPage />} />
+                  <Route path="/repositories" element={<RepositoriesPage />} />
+                  <Route path="/settings" element={<SettingsPage />} />
+                </Routes>
+              </Layout>
+            </ProtectedRoute>
             }
           />
         </Routes>

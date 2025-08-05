@@ -12,11 +12,8 @@ import {
   MenuItem,
   ListItemIcon,
   Divider,
-  Badge
 } from '@mui/material';
-import Brightness4Icon from '@mui/icons-material/Brightness4';
-import Brightness7Icon from '@mui/icons-material/Brightness7';
-import NotificationsIcon from '@mui/icons-material/Notifications';
+import ColorLensIcon from '@mui/icons-material/ColorLens';
 import PersonIcon from '@mui/icons-material/Person';
 import SettingsIcon from '@mui/icons-material/Settings';
 import LogoutIcon from '@mui/icons-material/Logout';
@@ -76,18 +73,20 @@ export const Navbar: React.FC<NavbarProps> = ({ onThemeToggle }) => {
         </Box>
 
         <Stack direction="row" spacing={1} alignItems="center">
-          <Tooltip title={mode === 'dark' ? 'Light Mode' : 'Dark Mode'}>
+          <Tooltip title="Change Theme">
             <IconButton 
               onClick={onThemeToggle} 
               sx={{ 
                 color: mode === 'dark' ? 'text.primary' : 'text.secondary',
+                transition: 'transform 0.2s',
                 '&:hover': {
                   bgcolor: mode === 'dark' ? 'rgba(255, 255, 255, 0.08)' : 'rgba(0, 0, 0, 0.04)',
+                  transform: 'rotate(30deg)',
                 },
               }}
               size="large"
             >
-              {mode === 'dark' ? <Brightness7Icon /> : <Brightness4Icon />}
+              <ColorLensIcon />
             </IconButton>
           </Tooltip>
 

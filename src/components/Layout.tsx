@@ -2,15 +2,14 @@ import React, { useState } from 'react';
 import { Box, useTheme as useMuiTheme } from '@mui/material';
 import { Navbar } from './Navbar';
 import Sidebar from './Sidebar';
-import { useTheme } from '../hooks/useTheme';
 
 interface LayoutProps {
   children: React.ReactNode;
+  onThemeToggle: () => void;
 }
 
-const Layout: React.FC<LayoutProps> = ({ children }) => {
+const Layout: React.FC<LayoutProps> = ({ children, onThemeToggle }) => {
   const muiTheme = useMuiTheme();
-  const { toggleTheme } = useTheme();
   const [sidebarOpen, setSidebarOpen] = useState(true);
 
   const handleSidebarToggle = () => {
@@ -22,7 +21,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
       sx={{
         minHeight: '100vh',
         display: 'flex',
-        background: `linear-gradient(135deg, ${muiTheme.palette.background.default} 0%, ${muiTheme.palette.background.paper} 100%)`,
+        bgcolor: 'background.default',
       }}
     >
       <Sidebar open={sidebarOpen} onToggle={handleSidebarToggle} />
@@ -35,7 +34,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
           overflow: 'hidden',
         }}
       >
-        <Navbar onThemeToggle={toggleTheme} />
+        <Navbar onThemeToggle={onThemeToggle} />
         <Box
           component="main"
           sx={{
@@ -54,4 +53,4 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   );
 };
 
-export default Layout; 
+export default Layout;
