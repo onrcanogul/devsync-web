@@ -93,106 +93,13 @@ const SettingsPage = () => {
   };
 
   const renderContent = () => {
-    switch (activeSection) {
-      case 'notifications':
-        return (
-          <Stack spacing={3}>
-            <Typography variant="subtitle2" gutterBottom>
-              Notification Preferences
-            </Typography>
-            <FormControlLabel
-              control={<Switch checked={settings.notifications.pullRequests} />}
-              label="Pull Request notifications"
-            />
-            <FormControlLabel
-              control={<Switch checked={settings.notifications.mentions} />}
-              label="Mention notifications"
-            />
-            <FormControlLabel
-              control={<Switch checked={settings.notifications.issues} />}
-              label="Issue notifications"
-            />
-            <FormControlLabel
-              control={<Switch checked={settings.notifications.security} />}
-              label="Security alerts"
-            />
-          </Stack>
-        );
-
-      case 'appearance':
-        return (
-          <Stack spacing={4}>
-            <Box>
-              <Typography variant="subtitle2" gutterBottom>
-                Theme
-              </Typography>
-              <Stack direction="row" spacing={2}>
-                <Button
-                  variant={mode === 'light' ? 'contained' : 'outlined'}
-                  onClick={toggleTheme}
-                  sx={{ minWidth: 120 }}
-                >
-                  Light
-                </Button>
-                <Button
-                  variant={mode === 'dark' ? 'contained' : 'outlined'}
-                  onClick={toggleTheme}
-                  sx={{ minWidth: 120 }}
-                >
-                  Dark
-                </Button>
-              </Stack>
-            </Box>
-
-            <Box>
-              <Typography variant="subtitle2" gutterBottom>
-                Preview
-              </Typography>
-              <Stack spacing={2}>
-                <Button variant="contained">
-                  Sample Button
-                </Button>
-                <Button variant="outlined">
-                  Sample Button
-                </Button>
-                <Chip label="Sample Chip" color="primary" />
-                <Alert severity="info">
-                  Sample information message
-                </Alert>
-              </Stack>
-            </Box>
-          </Stack>
-        );
-
-      case 'email':
-        return (
-          <Stack spacing={3}>
-            <Typography variant="subtitle2" gutterBottom>
-              Email Notifications
-            </Typography>
-            <FormControlLabel
-              control={<Switch checked={settings.email.daily} />}
-              label="Daily summary"
-            />
-            <FormControlLabel
-              control={<Switch checked={settings.email.weekly} />}
-              label="Weekly summary"
-            />
-            <FormControlLabel
-              control={<Switch checked={settings.email.mentions} />}
-              label="Mention notifications"
-            />
-          </Stack>
-        );
-      default:
-        return (
-          <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%', minHeight: 300 }}>
-            <Typography variant="h4" color="text.secondary">
-              Coming Soon
-            </Typography>
-          </Box>
-        );
-    }
+    return (
+      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%', minHeight: 300 }}>
+        <Typography variant="h4" color="text.secondary">
+          ✨ Coming Soon ✨
+        </Typography>
+      </Box>
+    );
   };
 
   return (
