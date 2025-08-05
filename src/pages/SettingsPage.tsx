@@ -8,8 +8,6 @@ import {
   Stack,
   Button,
   Chip,
-  IconButton,
-  TextField,
   Alert,
   List,
   ListItemIcon,
@@ -22,14 +20,7 @@ import {
   Email as EmailIcon,
   GitHub as GitHubIcon,
   Key as KeyIcon,
-  Delete as DeleteIcon,
-  Add as AddIcon,
-  ContentCopy as ContentCopyIcon,
   Palette as PaletteIcon,
-  Visibility as VisibilityIcon,
-  VisibilityOff as VisibilityOffIcon,
-  Chat as ChatIcon,
-  TaskAlt as TaskIcon,
 } from '@mui/icons-material';
 import { UserSettings } from '../types/settings';
 import { useTheme } from '../hooks/useTheme';
@@ -37,15 +28,12 @@ import { useTheme } from '../hooks/useTheme';
 const menuItems = [
   { id: 'notifications', icon: <NotificationsIcon />, label: 'Notifications' },
   { id: 'appearance', icon: <PaletteIcon />, label: 'Appearance' },
-  { id: 'email', icon: <EmailIcon />, label: 'Email' },
-  { id: 'integrations', icon: <GitHubIcon />, label: 'Integrations' },
-  { id: 'api', icon: <KeyIcon />, label: 'API Keys' },
+  { id: 'email', icon: <EmailIcon />, label: 'Email' }
 ];
 
 const SettingsPage = () => {
   const { mode, toggleTheme } = useTheme();
   const [activeSection, setActiveSection] = useState('notifications');
-  const [showApiKey, setShowApiKey] = useState<string | null>(null);
   const [copied, setCopied] = useState<string | null>(null);
 
   const settings: UserSettings = {
