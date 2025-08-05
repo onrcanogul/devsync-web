@@ -175,7 +175,7 @@ const AnalysisPage = () => {
                     </Tooltip>
                   )}
                 </Box>
-                
+                 
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                   <Typography variant="caption" color="text.secondary">
                     {node.repository?.name}
