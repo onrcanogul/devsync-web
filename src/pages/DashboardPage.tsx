@@ -58,7 +58,6 @@ const DashboardPage = () => {
         setLoading(false);
       }
     };
-
     fetchData();
   }, []);
 
