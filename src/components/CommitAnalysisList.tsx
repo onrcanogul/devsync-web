@@ -66,7 +66,7 @@ export const CommitAnalysisList: React.FC<CommitAnalysisListProps> = ({ commits 
         </Typography>
       </Box>
       <Divider />
-      {commits.map((commit, index) => (
+      {commits.map((commit) => (
         <Accordion
           key={commit.hash}
           expanded={expanded === commit.hash}
