@@ -13,7 +13,6 @@ import {
   Chip,
 } from '@mui/material';
 import {
-  Key as KeyIcon,
   Security as SecurityIcon,
   Code as CodeIcon,
   CheckCircle as CheckCircleIcon,
