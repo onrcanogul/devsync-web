@@ -18,7 +18,7 @@ function App() {
 
   return (
     <ThemeProvider theme={theme}>
-      <CssBaseline enableColorScheme />
+      <CssBaseline />
       <Router>
         <Routes>
           <Route path="/login" element={<LoginPage />} />

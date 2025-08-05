@@ -19,6 +19,7 @@ export const useTheme = () => {
   });
 
   const theme = useMemo(() => {
+    // Force theme recreation on mode change
     const baseTheme = createTheme({
       palette: {
         mode,
@@ -96,8 +97,10 @@ export const useTheme = () => {
   };
 
   useEffect(() => {
+    // Update body background color and force theme update
     document.body.style.backgroundColor = theme.palette.background.default;
-  }, [theme]);
+    document.documentElement.style.colorScheme = mode;
+  }, [theme, mode]);
 
   return { theme, mode, accentColor, toggleTheme, changeAccentColor };
 }; 
