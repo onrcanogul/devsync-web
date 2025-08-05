@@ -35,11 +35,11 @@ import { UserSettings } from '../types/settings';
 import { useTheme } from '../hooks/useTheme';
 
 const menuItems = [
-  { id: 'notifications', icon: <NotificationsIcon />, label: 'Bildirimler' },
-  { id: 'appearance', icon: <PaletteIcon />, label: 'Görünüm' },
-  { id: 'email', icon: <EmailIcon />, label: 'E-posta' },
-  { id: 'integrations', icon: <GitHubIcon />, label: 'Entegrasyonlar' },
-  { id: 'api', icon: <KeyIcon />, label: 'API Anahtarları' },
+  { id: 'notifications', icon: <NotificationsIcon />, label: 'Notifications' },
+  { id: 'appearance', icon: <PaletteIcon />, label: 'Appearance' },
+  { id: 'email', icon: <EmailIcon />, label: 'Email' },
+  { id: 'integrations', icon: <GitHubIcon />, label: 'Integrations' },
+  { id: 'api', icon: <KeyIcon />, label: 'API Keys' },
 ];
 
 const SettingsPage = () => {
@@ -111,23 +111,23 @@ const SettingsPage = () => {
         return (
           <Stack spacing={3}>
             <Typography variant="subtitle2" gutterBottom>
-              Bildirim Tercihleri
+              Notification Preferences
             </Typography>
             <FormControlLabel
               control={<Switch checked={settings.notifications.pullRequests} />}
-              label="Pull Request bildirimleri"
+              label="Pull Request notifications"
             />
             <FormControlLabel
               control={<Switch checked={settings.notifications.mentions} />}
-              label="Mention bildirimleri"
+              label="Mention notifications"
             />
             <FormControlLabel
               control={<Switch checked={settings.notifications.issues} />}
-              label="Issue bildirimleri"
+              label="Issue notifications"
             />
             <FormControlLabel
               control={<Switch checked={settings.notifications.security} />}
-              label="Güvenlik uyarıları"
+              label="Security alerts"
             />
           </Stack>
         );
@@ -145,28 +145,28 @@ const SettingsPage = () => {
                   onClick={toggleTheme}
                   sx={{ minWidth: 120 }}
                 >
-                  Açık
+                  Light
                 </Button>
                 <Button
                   variant={mode === 'dark' ? 'contained' : 'outlined'}
                   onClick={toggleTheme}
                   sx={{ minWidth: 120 }}
                 >
-                  Koyu
+                  Dark
                 </Button>
               </Stack>
             </Box>
 
             <Box>
               <Typography variant="subtitle2" gutterBottom>
-                Vurgu Rengi
+                Accent Color
               </Typography>
               <Stack direction="row" spacing={2}>
                 {[
-                  { color: '#6366F1', name: 'Mor' },
-                  { color: '#10B981', name: 'Yeşil' },
-                  { color: '#F59E0B', name: 'Turuncu' },
-                  { color: '#EF4444', name: 'Kırmızı' },
+                  { color: '#6366F1', name: 'Purple' },
+                  { color: '#10B981', name: 'Green' },
+                  { color: '#F59E0B', name: 'Orange' },
+                  { color: '#EF4444', name: 'Red' },
                 ].map((item) => (
                   <Box
                     key={item.color}
@@ -201,24 +201,24 @@ const SettingsPage = () => {
                 ))}
               </Stack>
               <Typography variant="caption" color="text.secondary" sx={{ mt: 1, display: 'block' }}>
-                Bu renk butonlarda, seçili öğelerde ve vurgulanmış elemanlarda kullanılacak
+                This color will be used in buttons, selected items, and highlighted elements
               </Typography>
             </Box>
 
             <Box>
               <Typography variant="subtitle2" gutterBottom>
-                Önizleme
+                Preview
               </Typography>
               <Stack spacing={2}>
                 <Button variant="contained">
-                  Örnek Buton
+                  Sample Button
                 </Button>
                 <Button variant="outlined">
-                  Örnek Buton
+                  Sample Button
                 </Button>
-                <Chip label="Örnek Chip" color="primary" />
+                <Chip label="Sample Chip" color="primary" />
                 <Alert severity="info">
-                  Örnek bilgi mesajı
+                  Sample information message
                 </Alert>
               </Stack>
             </Box>
@@ -229,207 +229,22 @@ const SettingsPage = () => {
         return (
           <Stack spacing={3}>
             <Typography variant="subtitle2" gutterBottom>
-              E-posta Bildirimleri
+              Email Notifications
             </Typography>
             <FormControlLabel
               control={<Switch checked={settings.email.daily} />}
-              label="Günlük özet"
+              label="Daily summary"
             />
             <FormControlLabel
               control={<Switch checked={settings.email.weekly} />}
-              label="Haftalık özet"
+              label="Weekly summary"
             />
             <FormControlLabel
               control={<Switch checked={settings.email.mentions} />}
-              label="Mention bildirimleri"
+              label="Mention notifications"
             />
           </Stack>
         );
-
-      case 'integrations':
-        return (
-          <Stack spacing={4}>
-            
-            <Paper
-              variant="outlined"
-              sx={{ p: 3, borderRadius: 2 }}
-            >
-              <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                <GitHubIcon sx={{ mr: 2 }} />
-                <Box sx={{ flex: 1 }}>
-                  <Typography variant="subtitle2">
-                    GitHub
-                  </Typography>
-                  {settings.integrations.github.connected && (
-                    <Typography variant="caption" color="text.secondary">
-                      {settings.integrations.github.username} • {settings.integrations.github.repositories} repositories
-                    </Typography>
-                  )}
-                </Box>
-                {settings.integrations.github.connected ? (
-                  <Button variant="outlined" color="error" size="small">
-                    Bağlantıyı Kes
-                  </Button>
-                ) : (
-                  <Button variant="contained" size="small">
-                    Bağlan
-                  </Button>
-                )}
-              </Box>
-              {settings.integrations.github.connected && (
-                <Typography variant="caption" color="text.secondary">
-                  Son senkronizasyon: {new Date(settings.integrations.github.lastSync).toLocaleString()}
-                </Typography>
-              )}
-            </Paper>
-
-            
-            <Paper
-              variant="outlined"
-              sx={{ p: 3, borderRadius: 2 }}
-            >
-              <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                <TaskIcon sx={{ mr: 2 }} />
-                <Box sx={{ flex: 1 }}>
-                  <Typography variant="subtitle2">
-                    Jira
-                  </Typography>
-                  {settings.integrations.jira.connected && settings.integrations.jira.workspace && (
-                    <Typography variant="caption" color="text.secondary">
-                      {settings.integrations.jira.workspace}
-                    </Typography>
-                  )}
-                </Box>
-                {settings.integrations.jira.connected ? (
-                  <Button variant="outlined" color="error" size="small">
-                    Bağlantıyı Kes
-                  </Button>
-                ) : (
-                  <Button variant="contained" size="small">
-                    Bağlan
-                  </Button>
-                )}
-              </Box>
-            </Paper>
-
-            <Paper
-              variant="outlined"
-              sx={{ p: 3, borderRadius: 2 }}
-            >
-              <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                <ChatIcon sx={{ mr: 2 }} />
-                <Box sx={{ flex: 1 }}>
-                  <Typography variant="subtitle2">
-                    Slack
-                  </Typography>
-                  {settings.integrations.slack.connected && settings.integrations.slack.workspace && (
-                    <Typography variant="caption" color="text.secondary">
-                      {settings.integrations.slack.workspace} • {settings.integrations.slack.channels} channels
-                    </Typography>
-                  )}
-                </Box>
-                {settings.integrations.slack.connected ? (
-                  <Button variant="outlined" color="error" size="small">
-                    Bağlantıyı Kes
-                  </Button>
-                ) : (
-                  <Button variant="contained" size="small">
-                    Bağlan
-                  </Button>
-                )}
-              </Box>
-            </Paper>
-          </Stack>
-        );
-
-      case 'api':
-        return (
-          <Stack spacing={3}>
-            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-              <Typography variant="subtitle2">
-                API Anahtarları
-              </Typography>
-              <Button
-                startIcon={<AddIcon />}
-                variant="contained"
-                size="small"
-              >
-                Yeni API Anahtarı
-              </Button>
-            </Box>
-
-            <Stack spacing={2}>
-              {settings.apiKeys.map((key) => (
-                <Paper
-                  key={key.id}
-                  variant="outlined"
-                  sx={{ p: 3, borderRadius: 2 }}
-                >
-                  <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                    <Box sx={{ flex: 1 }}>
-                      <Typography variant="subtitle2">
-                        {key.name}
-                      </Typography>
-                      <Typography variant="caption" color="text.secondary">
-                        Oluşturulma: {new Date(key.created).toLocaleDateString()}
-                      </Typography>
-                    </Box>
-                    <IconButton size="small" color="error">
-                      <DeleteIcon />
-                    </IconButton>
-                  </Box>
-
-                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 2 }}>
-                    <TextField
-                      fullWidth
-                      size="small"
-                      type={showApiKey === key.id ? 'text' : 'password'}
-                      value="sk_test_51NbgYAK8z1234567890"
-                      InputProps={{
-                        readOnly: true,
-                        endAdornment: (
-                          <>
-                            <IconButton
-                              size="small"
-                              onClick={() => setShowApiKey(showApiKey === key.id ? null : key.id)}
-                            >
-                              {showApiKey === key.id ? <VisibilityOffIcon /> : <VisibilityIcon />}
-                            </IconButton>
-                            <IconButton
-                              size="small"
-                              onClick={() => handleCopy('sk_test_51NbgYAK8z1234567890', key.id)}
-                            >
-                              <ContentCopyIcon />
-                            </IconButton>
-                          </>
-                        ),
-                      }}
-                    />
-                    {copied === key.id && (
-                      <Chip
-                        label="Kopyalandı!"
-                        color="success"
-                        size="small"
-                      />
-                    )}
-                  </Box>
-
-                  <Stack direction="row" spacing={1}>
-                    {key.scopes.map((scope) => (
-                      <Chip
-                        key={scope}
-                        label={scope}
-                        size="small"
-                        variant="outlined"
-                      />
-                    ))}
-                  </Stack>
-                </Paper>
-              ))}
-            </Stack>
-          </Stack>
-        );
-
       default:
         return null;
     }
@@ -438,7 +253,7 @@ const SettingsPage = () => {
   return (
     <Box sx={{ p: { xs: 2, sm: 3 } }}>
       <Typography variant="h5" sx={{ mb: 4, fontWeight: 600 }}>
-        Ayarlar
+        Settings
       </Typography>
 
       <Grid container spacing={3}>
