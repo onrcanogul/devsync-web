@@ -12,8 +12,6 @@ import {
 import {
   Notifications as NotificationsIcon,
   Email as EmailIcon,
-  GitHub as GitHubIcon,
-  Key as KeyIcon,
   Palette as PaletteIcon,
 } from '@mui/icons-material';
 import { UserSettings } from '../types/settings';
