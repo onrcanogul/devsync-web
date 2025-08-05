@@ -62,10 +62,12 @@ const DashboardPage = () => {
     fetchData();
   }, []);
 
+  // Risk score functionality temporarily removed
+  /*
   const getRiskColor = (riskScore: number) => {
     if (riskScore <= 30) return '#10B981';
-if (riskScore <= 70) return '#F59E0B';
-return '#EF4444';
+    if (riskScore <= 70) return '#F59E0B';
+    return '#EF4444';
   };
 
   const getRiskIcon = (riskScore: number) => {
@@ -79,6 +81,7 @@ return '#EF4444';
     const totalRisk = pullRequestNodes.reduce((acc, node) => acc + (node.analysis?.riskScore || 0), 0);
     return Math.round(totalRisk / pullRequestNodes.length);
   };
+  */
 
   const getRepositoryStats = () => {
     const stats = new Map<string, number>();
@@ -117,9 +120,9 @@ return '#EF4444';
           Pull Request Analytics Dashboard
         </Typography>
         <Chip
-          icon={averageRisk <= 30 ? <TrendingDownIcon /> : <TrendingUpIcon />}
-          label={`Average Risk: ${averageRisk}%`}
-          color={averageRisk <= 30 ? "success" : averageRisk <= 70 ? "warning" : "error"}
+          icon={<TrendingUpIcon />}
+          label="Risk Score: Coming Soon"
+          color="default"
         />
       </Box>
 
@@ -167,54 +170,18 @@ return '#EF4444';
               height: '100%',
               bgcolor: 'background.paper',
               borderRadius: 2,
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
             }}
           >
             <Typography variant="h6" gutterBottom>
-              Risk Distribution
+              Risk Score
             </Typography>
-            <Grid container spacing={2}>
-              {[
-                {
-                  label: 'Low Risk',
-                  count: pullRequestNodes.filter(node => node.analysis?.riskScore <= 30).length,
-                  color: '#10B981',
-                  icon: <CheckCircleIcon />,
-                },
-                {
-                  label: 'Medium Risk',
-                  count: pullRequestNodes.filter(node => node.analysis?.riskScore > 30 && node.analysis?.riskScore <= 70).length,
-                  color: '#F59E0B',
-                  icon: <WarningIcon />,
-                },
-                {
-                  label: 'High Risk',
-                  count: pullRequestNodes.filter(node => node.analysis?.riskScore > 70).length,
-                  color: '#EF4444',
-                  icon: <ErrorIcon />,
-                },
-              ].map((risk) => (
-                <Grid item xs={4} key={risk.label}>
-                  <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
-                    <Box sx={{ color: risk.color, mr: 1 }}>
-                      {risk.icon}
-                    </Box>
-                    <Typography variant="body2">{risk.label}</Typography>
-                  </Box>
-                  <Typography variant="h4" sx={{ color: risk.color, mb: 1 }}>
-                    {risk.count}
-                  </Typography>
-                  <LinearProgress
-                    variant="determinate"
-                    value={(risk.count / pullRequestNodes.length) * 100}
-                    sx={{
-                      bgcolor: `${risk.color}20`,
-                      '& .MuiLinearProgress-bar': {
-                        bgcolor: risk.color,
-                      },
-                    }}
-                  />
-                </Grid>
-              ))}
+            <Typography variant="h4" color="text.secondary" sx={{ mt: 2 }}>
+              Coming Soon
+            </Typography>
             </Grid>
           </Paper>
         </Grid>
@@ -286,6 +253,7 @@ return '#EF4444';
                   onClick={() => navigate(`/analysis/${node.id}`)}
                 >
                   <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 2 }}>
+                    {/* Risk score avatar temporarily removed 
                     <Avatar
                       sx={{
                         bgcolor: getRiskColor(node.analysis?.riskScore || 0),
@@ -295,6 +263,7 @@ return '#EF4444';
                     >
                       {getRiskIcon(node.analysis?.riskScore || 0)}
                     </Avatar>
+                    */}
                     <Box sx={{ flex: 1 }}>
                       <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 0.5 }}>
                         <Typography variant="body2" sx={{ fontWeight: 500 }}>

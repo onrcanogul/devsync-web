@@ -185,7 +185,13 @@ const SettingsPage = () => {
           </Stack>
         );
       default:
-        return null;
+        return (
+          <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%', minHeight: 300 }}>
+            <Typography variant="h4" color="text.secondary">
+              Coming Soon
+            </Typography>
+          </Box>
+        );
     }
   };
 

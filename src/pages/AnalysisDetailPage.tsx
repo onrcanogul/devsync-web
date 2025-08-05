@@ -55,6 +55,8 @@ const AnalysisDetailPage = () => {
     fetchAnalysis();
   }, [id]);
 
+  // Risk score functionality temporarily removed
+  /*
   const getRiskColor = (riskScore: number) => {
     if (riskScore <= 30) return theme.palette.success.main;
     if (riskScore <= 70) return theme.palette.warning.main;
@@ -72,6 +74,7 @@ const AnalysisDetailPage = () => {
     if (riskScore <= 70) return <WarningIcon />;
     return <ErrorIcon />;
   };
+  */
 
   if (loading) {
     return (
@@ -149,6 +152,7 @@ const AnalysisDetailPage = () => {
                 </Typography>
               </Box>
             </Box>
+            {/* Risk score section temporarily removed
             {node.analysis && (
               <Tooltip title={`Risk Score: ${node.analysis.riskScore}`}>
                 <Box sx={{ 
@@ -164,6 +168,7 @@ const AnalysisDetailPage = () => {
                 </Box>
               </Tooltip>
             )}
+            */}
           </Box>
         </Paper>
       </Box>
