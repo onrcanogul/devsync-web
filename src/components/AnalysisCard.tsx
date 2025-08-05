@@ -82,14 +82,12 @@ export const AnalysisCard: React.FC<AnalysisCardProps> = ({ node }) => {
                 variant="outlined" 
               />
             )}
-            {/* Risk score chip temporarily removed
             <Chip 
               size="small" 
               label={`Risk: ${node.analysis.riskScore}`} 
               color={node.analysis.riskScore > 50 ? 'error' : 'success'} 
               variant="outlined" 
             />
-            */}
           </Box>
         </Box>
       </CardContent>
