@@ -14,8 +14,6 @@ import {
   Email as EmailIcon,
   Palette as PaletteIcon,
 } from '@mui/icons-material';
-import { UserSettings } from '../types/settings';
-import { useTheme } from '../hooks/useTheme';
 
 const menuItems = [
   { id: 'notifications', icon: <NotificationsIcon />, label: 'Notifications' },
