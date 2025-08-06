@@ -59,18 +59,6 @@ export const Navbar: React.FC<NavbarProps> = ({ onThemeToggle }) => {
       }}
     >
       <Toolbar sx={{ justifyContent: 'space-between' }}>
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          <Tooltip title="Global Search">
-            <IconButton 
-              sx={{ 
-                color: mode === 'dark' ? 'text.primary' : 'text.secondary'
-              }}
-              size="large"
-            >
-              <SearchIcon />
-            </IconButton>
-          </Tooltip>
-        </Box>
 
         <Stack direction="row" spacing={1} alignItems="center">
           <Tooltip title="Change Theme">
