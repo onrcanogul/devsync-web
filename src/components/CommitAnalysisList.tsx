@@ -86,24 +86,74 @@ export const CommitAnalysisList: React.FC<CommitAnalysisListProps> = ({ commits 
             expandIcon={<ExpandMoreIcon />}
             sx={{
               px: 3,
+              py: 1.5,
               '&:hover': {
                 bgcolor: alpha(theme.palette.primary.main, 0.03),
               },
+              '& .MuiAccordionSummary-content': {
+                margin: 0,
+              }
             }}
           >
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, width: '100%' }}>
-              <Typography
-                sx={{
-                  flex: 1,
-                  fontFamily: 'monospace',
-                  color: theme.palette.text.secondary,
-                }}
-              >
-                {commit.hash.substring(0, 7)}
-              </Typography>
-              <Typography sx={{ flex: 4 }}>{commit.message}</Typography>
+            <Box sx={{ 
+              display: 'flex', 
+              alignItems: 'flex-start', 
+              gap: 2, 
+              width: '100%',
+              position: 'relative'
+            }}>
+              <Box sx={{ 
+                display: 'flex', 
+                flexDirection: 'column', 
+                gap: 0.5,
+                flex: 1
+              }}>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                  <Typography
+                    sx={{
+                      fontFamily: 'monospace',
+                      color: theme.palette.text.secondary,
+                      fontSize: '0.875rem',
+                      bgcolor: alpha(theme.palette.text.secondary, 0.1),
+                      px: 1,
+                      py: 0.5,
+                      borderRadius: 1,
+                    }}
+                  >
+                    {commit.hash.substring(0, 7)}
+                  </Typography>
+                  <Typography 
+                    sx={{ 
+                      fontWeight: 500,
+                      color: theme.palette.text.primary,
+                    }}
+                  >
+                    {commit.message}
+                  </Typography>
+                </Box>
+                {commit.analysis?.riskReason && (
+                  <Typography 
+                    variant="body2" 
+                    color="text.secondary"
+                    sx={{ 
+                      fontSize: '0.813rem',
+                      pl: '76px',
+                      pr: '220px',
+                      lineHeight: 1.4
+                    }}
+                  >
+                    {commit.analysis.riskReason}
+                  </Typography>
+                )}
+              </Box>
               {commit.analysis && (
-                <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', minWidth: '200px' }}>
+                <Box 
+                  sx={{ 
+                    position: 'absolute',
+                    right: 0,
+                    top: 0
+                  }}
+                >
                   <Chip
                     size="small"
                     label={getRiskLabel(commit.analysis.commitRiskScore)}
@@ -111,24 +161,12 @@ export const CommitAnalysisList: React.FC<CommitAnalysisListProps> = ({ commits 
                     sx={{
                       color: getRiskColor(commit.analysis.commitRiskScore),
                       bgcolor: alpha(getRiskColor(commit.analysis.commitRiskScore), 0.1),
-                      mb: commit.analysis.riskReason ? 1 : 0
+                      fontWeight: 500,
+                      '& .MuiChip-icon': {
+                        fontSize: '1rem'
+                      }
                     }}
                   />
-                  {commit.analysis.riskReason && (
-                    <Typography 
-                      variant="body2" 
-                      color="text.secondary"
-                      sx={{ 
-                        fontSize: '0.75rem',
-                        textAlign: 'right',
-                        maxWidth: '300px',
-                        whiteSpace: 'normal',
-                        lineHeight: 1.2
-                      }}
-                    >
-                      {commit.analysis.riskReason}
-                    </Typography>
-                  )}
                 </Box>
               )}
             </Box>
