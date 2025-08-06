@@ -2,7 +2,6 @@ import { decodeJwt } from '../utils/jwt';
 import apiClient from './apiClient';
 
 const GITHUB_CLIENT_ID = process.env.REACT_APP_GITHUB_CLIENT_ID;
-
 if (!GITHUB_CLIENT_ID) {
   throw new Error('GitHub Client ID is not configured. Please set REACT_APP_GITHUB_CLIENT_ID in your environment variables.');
 }
