@@ -103,12 +103,7 @@ export const CommitAnalysisList: React.FC<CommitAnalysisListProps> = ({ commits 
               </Typography>
               <Typography sx={{ flex: 4 }}>{commit.message}</Typography>
               {commit.analysis && (
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                  {commit.analysis.riskReason && (
-                    <Typography variant="body2" color="text.secondary">
-                      {commit.analysis.riskReason}
-                    </Typography>
-                  )}
+                <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', minWidth: '200px' }}>
                   <Chip
                     size="small"
                     label={getRiskLabel(commit.analysis.commitRiskScore)}
@@ -116,8 +111,24 @@ export const CommitAnalysisList: React.FC<CommitAnalysisListProps> = ({ commits 
                     sx={{
                       color: getRiskColor(commit.analysis.commitRiskScore),
                       bgcolor: alpha(getRiskColor(commit.analysis.commitRiskScore), 0.1),
+                      mb: commit.analysis.riskReason ? 1 : 0
                     }}
                   />
+                  {commit.analysis.riskReason && (
+                    <Typography 
+                      variant="body2" 
+                      color="text.secondary"
+                      sx={{ 
+                        fontSize: '0.75rem',
+                        textAlign: 'right',
+                        maxWidth: '300px',
+                        whiteSpace: 'normal',
+                        lineHeight: 1.2
+                      }}
+                    >
+                      {commit.analysis.riskReason}
+                    </Typography>
+                  )}
                 </Box>
               )}
             </Box>

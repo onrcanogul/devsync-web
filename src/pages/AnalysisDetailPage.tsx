@@ -156,6 +156,7 @@ const AnalysisDetailPage = () => {
                     alignItems: 'center', 
                     gap: 1,
                     color: getRiskColor(node.analysis.riskScore),
+                    mb: node.analysis.riskReason ? 1 : 0
                   }}>
                     {getRiskIcon(node.analysis.riskScore)}
                     <Typography variant="h6">
@@ -164,7 +165,15 @@ const AnalysisDetailPage = () => {
                   </Box>
                 </Tooltip>
                 {node.analysis.riskReason && (
-                  <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
+                  <Typography 
+                    variant="body2" 
+                    color="text.secondary" 
+                    sx={{ 
+                      maxWidth: '400px',
+                      textAlign: 'right',
+                      lineHeight: 1.3
+                    }}
+                  >
                     {node.analysis.riskReason}
                   </Typography>
                 )}
