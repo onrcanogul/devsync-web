@@ -58,8 +58,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onThemeToggle }) => {
         borderColor: 'divider',
       }}
     >
-      <Toolbar sx={{ justifyContent: 'space-between' }}>
-
+      <Toolbar sx={{ display: 'flex', justifyContent: 'flex-end' }}>
         <Stack direction="row" spacing={1} alignItems="center">
           <Tooltip title="Change Theme">
             <IconButton 
@@ -82,7 +81,6 @@ export const Navbar: React.FC<NavbarProps> = ({ onThemeToggle }) => {
             <IconButton
               onClick={handleProfileClick}
               size="small"
-              sx={{ ml: 2 }}
               aria-controls={open ? 'account-menu' : undefined}
               aria-haspopup="true"
               aria-expanded={open ? 'true' : undefined}
