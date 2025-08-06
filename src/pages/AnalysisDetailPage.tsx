@@ -264,7 +264,6 @@ const AnalysisDetailPage = () => {
               </Typography>
             </Paper>
           </>
-          
 
         )}
         {node.commits && node.commits.length > 0 && (
