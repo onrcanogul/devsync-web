@@ -264,6 +264,7 @@ const AnalysisDetailPage = () => {
               </Typography>
             </Paper>
           </>
+          
         )}
         {node.commits && node.commits.length > 0 && (
           <CommitAnalysisList commits={node.commits} />
