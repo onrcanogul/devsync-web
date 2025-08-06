@@ -154,19 +154,15 @@ export const CommitAnalysisList: React.FC<CommitAnalysisListProps> = ({ commits 
                     top: 0
                   }}
                 >
-                  <Chip
-                    size="small"
-                    label={getRiskLabel(commit.analysis.commitRiskScore)}
-                    icon={getRiskIcon(commit.analysis.commitRiskScore)}
-                    sx={{
-                      color: getRiskColor(commit.analysis.commitRiskScore),
-                      bgcolor: alpha(getRiskColor(commit.analysis.commitRiskScore), 0.1),
-                      fontWeight: 500,
-                      '& .MuiChip-icon': {
-                        fontSize: '1rem'
-                      }
+                  <Box 
+                    sx={{ 
+                      display: 'flex',
+                      alignItems: 'center',
+                      color: getRiskColor(commit.analysis.commitRiskScore)
                     }}
-                  />
+                  >
+                    {getRiskIcon(commit.analysis.commitRiskScore)}
+                  </Box>
                 </Box>
               )}
             </Box>
