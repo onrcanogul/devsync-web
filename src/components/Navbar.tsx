@@ -3,7 +3,6 @@ import {
   AppBar, 
   Toolbar, 
   IconButton, 
-  Box, 
   useTheme as useMuiTheme,
   Stack,
   Tooltip,
