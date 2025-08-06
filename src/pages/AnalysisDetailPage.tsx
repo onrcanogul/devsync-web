@@ -10,7 +10,6 @@ import {
   alpha,
   CircularProgress,
   Alert,
-  Divider,
   Chip,
 } from '@mui/material';
 import { CommitAnalysisList } from '../components/CommitAnalysisList';
