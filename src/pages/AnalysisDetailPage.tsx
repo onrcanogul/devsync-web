@@ -150,19 +150,26 @@ const AnalysisDetailPage = () => {
               </Box>
             </Box>
             {node.analysis && (
-              <Tooltip title={`Risk Score: ${node.analysis.riskScore}`}>
-                <Box sx={{ 
-                  display: 'flex', 
-                  alignItems: 'center', 
-                  gap: 1,
-                  color: getRiskColor(node.analysis.riskScore),
-                }}>
-                  {getRiskIcon(node.analysis.riskScore)}
-                  <Typography variant="h6">
-                    {getRiskLabel(node.analysis.riskScore)}
+              <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
+                <Tooltip title={`Risk Score: ${node.analysis.riskScore}`}>
+                  <Box sx={{ 
+                    display: 'flex', 
+                    alignItems: 'center', 
+                    gap: 1,
+                    color: getRiskColor(node.analysis.riskScore),
+                  }}>
+                    {getRiskIcon(node.analysis.riskScore)}
+                    <Typography variant="h6">
+                      {getRiskLabel(node.analysis.riskScore)}
+                    </Typography>
+                  </Box>
+                </Tooltip>
+                {node.analysis.riskReason && (
+                  <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
+                    {node.analysis.riskReason}
                   </Typography>
-                </Box>
-              </Tooltip>
+                )}
+              </Box>
             )}
           </Box>
         </Paper>

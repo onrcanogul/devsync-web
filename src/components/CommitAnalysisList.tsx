@@ -103,15 +103,22 @@ export const CommitAnalysisList: React.FC<CommitAnalysisListProps> = ({ commits 
               </Typography>
               <Typography sx={{ flex: 4 }}>{commit.message}</Typography>
               {commit.analysis && (
-                <Chip
-                  size="small"
-                  label={getRiskLabel(commit.analysis.commitRiskScore)}
-                  icon={getRiskIcon(commit.analysis.commitRiskScore)}
-                  sx={{
-                    color: getRiskColor(commit.analysis.commitRiskScore),
-                    bgcolor: alpha(getRiskColor(commit.analysis.commitRiskScore), 0.1),
-                  }}
-                />
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                  {commit.analysis.riskReason && (
+                    <Typography variant="body2" color="text.secondary">
+                      {commit.analysis.riskReason}
+                    </Typography>
+                  )}
+                  <Chip
+                    size="small"
+                    label={getRiskLabel(commit.analysis.commitRiskScore)}
+                    icon={getRiskIcon(commit.analysis.commitRiskScore)}
+                    sx={{
+                      color: getRiskColor(commit.analysis.commitRiskScore),
+                      bgcolor: alpha(getRiskColor(commit.analysis.commitRiskScore), 0.1),
+                    }}
+                  />
+                </Box>
               )}
             </Box>
           </AccordionSummary>

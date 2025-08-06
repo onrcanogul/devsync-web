@@ -34,6 +34,7 @@ export interface CommitAnalysisNode {
   functionalComment: string;
   architecturalComment: string;
   commitRiskScore: number;
+  riskReason: string;
 }
 
 export interface CommitNode {
@@ -76,6 +77,7 @@ export interface PullRequestAnalysisNode {
   functionalComment: string;
   architecturalComment: string;
   riskScore: number;
+  riskReason: string;
 }
 
 export interface PullRequestNode {
