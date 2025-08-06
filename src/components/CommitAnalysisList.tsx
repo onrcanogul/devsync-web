@@ -13,9 +13,6 @@ import {
 } from '@mui/material';
 import {
   ExpandMore as ExpandMoreIcon,
-  CheckCircle as CheckCircleIcon,
-  Warning as WarningIcon,
-  Error as ErrorIcon,
   Code as CodeIcon,
   Architecture as ArchitectureIcon,
   Functions as FunctionsIcon,
@@ -34,23 +31,7 @@ export const CommitAnalysisList: React.FC<CommitAnalysisListProps> = ({ commits 
     setExpanded(isExpanded ? commitHash : false);
   };
 
-  const getRiskColor = (riskScore: number) => {
-    if (riskScore <= 30) return theme.palette.success.main;
-    if (riskScore <= 70) return theme.palette.warning.main;
-    return theme.palette.error.main;
-  };
 
-  const getRiskLabel = (riskScore: number) => {
-    if (riskScore <= 30) return 'Low Risk';
-    if (riskScore <= 70) return 'Medium Risk';
-    return 'High Risk';
-  };
-
-  const getRiskIcon = (riskScore: number) => {
-    if (riskScore <= 30) return <CheckCircleIcon fontSize="small" />;
-    if (riskScore <= 70) return <WarningIcon fontSize="small" />;
-    return <ErrorIcon fontSize="small" />;
-  };
 
   return (
     <Paper
@@ -146,25 +127,7 @@ export const CommitAnalysisList: React.FC<CommitAnalysisListProps> = ({ commits 
                   </Typography>
                 )}
               </Box>
-              {commit.analysis && (
-                <Box 
-                  sx={{ 
-                    position: 'absolute',
-                    right: 0,
-                    top: 0
-                  }}
-                >
-                  <Box 
-                    sx={{ 
-                      display: 'flex',
-                      alignItems: 'center',
-                      color: getRiskColor(commit.analysis.commitRiskScore)
-                    }}
-                  >
-                    {getRiskIcon(commit.analysis.commitRiskScore)}
-                  </Box>
-                </Box>
-              )}
+
             </Box>
           </AccordionSummary>
           {commit.analysis && (

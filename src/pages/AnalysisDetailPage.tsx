@@ -266,9 +266,9 @@ const AnalysisDetailPage = () => {
           </>
 
         )}
-        {node.commits && node.commits.length > 0 && (
-          <CommitAnalysisList commits={node.commits} />
-        )}
+                  {node.commits && node.commits.length > 1 && (
+            <CommitAnalysisList commits={node.commits} />
+          )}
       </Box>
     </Box>
   );
