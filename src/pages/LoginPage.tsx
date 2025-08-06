@@ -10,7 +10,6 @@ import {
 import { GitHub as GitHubIcon } from '@mui/icons-material';
 import { authService } from '../services/authService';
 import Logo from '../components/Logo';
-import { githubRepositoryService } from '../services/githubRepositoryService';
 
 
 const LoginPage = () => {
